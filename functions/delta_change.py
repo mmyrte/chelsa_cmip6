@@ -69,6 +69,12 @@ if debugging != 1:
     ap.add_argument('-rs','--aefs', type=str, help="anomaly period start, e.g. 2041-01-01, date format YYYY-MM-DD, string")
     ap.add_argument('-rs','--aefe', type=str, help="anomaly period end, e.g. 2070-01-01, date format YYYY-MM-DD, string")
     ap.add_argument('-tm','--tmp', type=str, help="directory for temporary files, string")
+    ap.add_argument('-op','--output', type=str, help="directory for output files, string")
+    ap.add_argument('-xm', '--xmin', type=float, help="western boundary of the extent, WGS84 lat. lon., float")
+    ap.add_argument('-xx', '--xmax', type=float, help="eastern boundary of the extent, WGS84 lat. lon., float")
+    ap.add_argument('-ym', '--ymin', type=float, help="southern boundary of the extent, WGS84 lat. lon., float")
+    ap.add_argument('-yx', '--ymax', type=float, help="northern boundary of the extent, WGS84 lat. lon., float")
+
     args = ap.parse_args()
     print(args)
     source1   = args.source
@@ -81,6 +87,11 @@ if debugging != 1:
     fefps     = args.aefs
     fefpe     = args.aefe
     tmp       = args.tmp
+    outpath   = args.output
+    ymin = args.ymin
+    ymax = args.ymax
+    xmin = args.xmin
+    xmax = args.xmax
 
 ######################################################################
 # Define Functions
@@ -364,54 +375,6 @@ def import_gdal(File):
 
     return output
 
-def Run_SAGA_Tool(File):
-    #_____________________________________
-    # Create a new instance of tool 'Clip Grids'
-    Tool = saga_api.SG_Get_Tool_Library_Manager().Create_Tool('grid_tools', '31')
-    if Tool == None:
-        print('Failed to create tool: Clip Grids')
-        return False
-
-    Tool.Get_Parameters().Reset_Grid_System()
-
-    Tool.Get_Parameter('GRIDS').asList().Add_Item('Grid input list')
-    Tool.Set_Parameter('EXTENT', 'user defined')
-    Tool.Set_Parameter('GRIDSYSTEM', saga_api.CSG_Grid_System(0.000000, 0.000000, 0.000000, 0, 0))
-    Tool.Set_Parameter('SHAPES', 'Shapes input')
-    Tool.Set_Parameter('POLYGONS', 'Shapes input')
-    Tool.Set_Parameter('INTERIOR', False)
-    Tool.Set_Parameter('XMIN', 0.000000)
-    Tool.Set_Parameter('XMAX', 0.000000)
-    Tool.Set_Parameter('YMIN', 0.000000)
-    Tool.Set_Parameter('YMAX', 0.000000)
-    Tool.Set_Parameter('NX', 1)
-    Tool.Set_Parameter('NY', 1)
-    Tool.Set_Parameter('BUFFER', 0.000000)
-
-    print('Executing tool: ' + Tool.Get_Name().c_str())
-    if Tool.Execute() == False:
-        print('failed')
-        return False
-    print('okay')
-
-    #_____________________________________
-    # Save results to file:
-    Path = os.path.split(File)[0] + os.sep
-
-    List = Tool.Get_Parameter('CLIPPED').asList()
-    Name = Path + List.Get_Name()
-    for i in range(0, List.Get_Data_Count()):
-        List.Get_Data(i).Save(Name + str(i) + '.sg-grd-z')
-
-    #_____________________________________
-    # remove this tool instance, if you don't need it anymore
-    saga_api.SG_Get_Tool_Library_Manager().Delete_Tool(Tool)
-
-    # job is done, free memory resources
-    saga_api.SG_Get_Data_Manager().Delete_All()
-
-    return True
-
 ######################################################################
 # Script
 ######################################################################
@@ -419,7 +382,6 @@ def Run_SAGA_Tool(File):
 if __name__ == '__main__':
     saga_api.SG_Get_Data_Manager().Delete_All()  # make sure the data manager is empty
     Load_Tool_Libraries(True)
-
     vars = ['tas' , 'tasmax' , 'tasmin' , 'pr']
     dicto = {}
     for var in vars:
