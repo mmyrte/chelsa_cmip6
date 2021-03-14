@@ -56,10 +56,10 @@ if debugging != 1:
     ap.add_argument('-a','--activity', type=str,  help="activity id, e.g. ScenarioMIP, string")
     ap.add_argument('-e','--experiment', type=str, help="experiment id, e.g. ssp585, string")
     ap.add_argument('-m','--member', type=str,  help="ensemble member, e.g. r1i1p1f1, string")
-    ap.add_argument('-rs','--refs', type=str, help="reference period start, e.g. 1981-01-01, date format YYYY-MM-DD, string")
-    ap.add_argument('-rs','--refe', type=str, help="reference period end, e.g. 2010-12-31, date format YYYY-MM-DD, string")
-    ap.add_argument('-rs','--aefs', type=str, help="anomaly period start, e.g. 2041-01-01, date format YYYY-MM-DD, string")
-    ap.add_argument('-rs','--aefe', type=str, help="anomaly period end, e.g. 2070-01-01, date format YYYY-MM-DD, string")
+    ap.add_argument('-rs','--refps', type=str, help="reference period start, e.g. 1981-01-01, date format YYYY-MM-DD, string")
+    ap.add_argument('-re','--refpe', type=str, help="reference period end, e.g. 2010-12-31, date format YYYY-MM-DD, string")
+    ap.add_argument('-fs','--fefps', type=str, help="anomaly period start, e.g. 2041-01-01, date format YYYY-MM-DD, string")
+    ap.add_argument('-fe','--fefpe', type=str, help="anomaly period end, e.g. 2070-01-01, date format YYYY-MM-DD, string")
     ap.add_argument('-tm','--tmp', type=str, help="directory for temporary files, string")
     args = ap.parse_args()
     print(args)
@@ -68,10 +68,10 @@ if debugging != 1:
     activity1 = args.activity
     ssp1      = args.experiment
     member1   = args.member
-    refps     = args.refs
-    refpe     = args.refe
-    fefps     = args.aefs
-    fefpe     = args.aefe
+    refps     = args.refps
+    refpe     = args.refpe
+    fefps     = args.fefps
+    fefpe     = args.fefpe
     tmp       = args.tmp
 
 ######################################################################

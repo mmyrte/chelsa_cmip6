@@ -44,6 +44,6 @@ echo 'chelsa_downscale_cmip6.sh version 1.0
 exit 1
 fi
 mkdir -p $TEMP
-singularity -exec ubuntu_py_cmip6.cont get_cmip6_ano.py python3 --source $MODEL --table $TABLE --activity $ACTIVITY --ssp $SSP --member $MEMBER --refps $REFPS --refpe $REFPE --fefps $FEFPS --fefpe $FEFPE --tmp = $TEMP
-singularity -exec chelsa_V2.1.cont get_cmip6_ano.py python --source $MODEL --table $TABLE --activity $ACTIVITY --ssp $SSP --member $MEMBER --refps $REFPS --refpe $REFPE --fefps $FEFPS --fefpe $FEFPE --tmp = $TEMP --outpath $OUTPUT --ymin $YMIN --ymax $YMAX --xmin $XMIN --xmax $XMAX
+singularity exec ubuntu_py_cmip6.cont python3.8 get_cmip6_ano.py --source $MODEL --table $TABLE --activity $ACTIVITY --experiment $SSP --member $MEMBER --refps $REFPS --refpe $REFPE --fefps $FEFPS --fefpe $FEFPE --tmp $TEMP
+singularity exec chelsa_V2.1.cont python delta_change.py --source $MODEL --table $TABLE --activity $ACTIVITY --experiment $SSP --member $MEMBER --refps $REFPS --refpe $REFPE --fefps $FEFPS --fefpe $FEFPE --tmp $TEMP --outpath $OUTPUT --ymin $YMIN --ymax $YMAX --xmin $XMIN --xmax $XMAX
 rm -r $TEMP
