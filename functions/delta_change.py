@@ -56,6 +56,7 @@ if debugging == 1:
     ymax = 47.5
     xmin = 5.3
     xmax = 10.4
+    outpath = tmp
 
 if debugging != 1:
     ap.add_argument('-s','--source', type=str, help="Source model (GCM), e.g. GFDL-ESM4, string")
@@ -228,7 +229,7 @@ def multilevel_B_spline(shape, template):
         return False
 
     Tool.Set_Parameter('SHAPES', shape)
-    Tool.Set_Parameter('FIELD', 3)
+    Tool.Set_Parameter('FIELD', 4)
     Tool.Set_Parameter('TARGET_DEFINITION', 'user defined')
     Tool.Set_Parameter('TARGET_USER_SIZE', template.Get_Cellsize())
     Tool.Set_Parameter('TARGET_USER_XMIN', template.Get_XMin())
@@ -411,7 +412,6 @@ def Run_SAGA_Tool(File):
 
     return True
 
-
 ######################################################################
 # Script
 ######################################################################
@@ -421,27 +421,31 @@ if __name__ == '__main__':
     Load_Tool_Libraries(True)
 
     vars = ['tas' , 'tasmax' , 'tasmin' , 'pr']
-
-    #for var in vars:
-
-    var = 'tas'
-        #load anomalies
-    ano = import_ncdf(tmp + var + 'ano_tmp.nc')
-
-    #for n in range(2,13):
-        n=2
-        month=n-1
-        ano_n = ano.asGridList().Get_Grid(n)
-        ano_3 = change_latlong360(ano_n,0)
-        ano_p = gridvalues_to_points(ano_3)
-
-        url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/'+var+'/CHELSA_'+var+'_'+'%02d' % (month,)+'_1981-2010_V.2.1.tif'
-        chfiles = requests.get(url)
-
-        g1 = import_gdal(tmp+'tmp1.tif')
-        g1c = clip_grid(g1,xmin,xmax,ymin,ymax)
-
-        bias =
+    dicto = {}
+    for var in vars:
+        for n in range(2,14):
+            month=n-1
+            ano = import_ncdf(tmp + var + 'ano_tmp.nc')
+            ano_n = ano.asGridList().Get_Grid(n)
+            ano_3 = change_latlong360(ano_n,0)
+            ano_p = gridvalues_to_points(ano_3)
+            url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/'+var+'/CHELSA_'+var+'_'+'%02d' % (month,)+'_1981-2010_V.2.1.tif'
+            chfiles = requests.get(url, allow_redirects=True)
+            open(tmp + 'tmp1.tif', 'wb').write(chfiles.content)
+            g1 = import_gdal(tmp+'tmp1.tif')
+            g1c = clip_grid(g1,xmin,xmax,ymin,ymax)
+            # delta change method
+            if var == 'tas' or var == 'tasmax' or var == 'tasmin':
+                bias = multilevel_B_spline(ano_p,g1c.Get_Grid(0))
+                bcor = grid_calculatorX(g1c.Get_Grid(0), bias, 'a-b')
+            if var == 'pr':
+                bias = multilevel_B_spline(ano_p, g1c.Get_Grid(0))
+                bcor = grid_calculatorX(g1c.Get_Grid(0), bias, 'a/b')
+            name1 = outpath + 'CHELSA_CMIP6_' + activity1 + '_' + ssp1 + '_' + member1 + '_' + table1 + '_' + var +'_' + '%02d' % (month,) + '_' + fefps + '_' + fefpe +  '.tif'
+            export_geotiff(bcor,name1)
+            dicto["grid{0}".format(n)] = bcor
+            os.remove(tmp + 'tmp1.tif')
+            saga_api.SG_Get_Data_Manager().Delete_All()
 
 
 
