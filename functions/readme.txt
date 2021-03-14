@@ -28,7 +28,7 @@ western boundary of the extent, WGS84 lat. lon., float
 eastern boundary of the extent, WGS84 lat. lon., float
 southern boundary of the extent, WGS84 lat. lon., float
 northern boundary of the extent, WGS84 lat. lon., float'
-
+Example parameters:
 MODEL=GFDL-ESM4
 TABLE=Amon
 ACTIVITY=ScenarioMIP

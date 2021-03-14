@@ -401,7 +401,7 @@ if __name__ == '__main__':
             if var == 'pr':
                 bias = multilevel_B_spline(ano_p, g1c.Get_Grid(0))
                 bcor = grid_calculatorX(g1c.Get_Grid(0), bias, 'a/b')
-            name1 = outpath + 'CHELSA_CMIP6_' + activity1 + '_' + ssp1 + '_' + member1 + '_' + table1 + '_' + var +'_' + '%02d' % (month,) + '_' + fefps + '_' + fefpe +  '.tif'
+            name1 = outpath + 'CHELSA_CMIP6_' + source1 + '_' + activity1 + '_' + ssp1 + '_' + member1 + '_' + table1 + '_' + var +'_' + '%02d' % (month,) + '_' + fefps + '_' + fefpe +  '.tif'
             export_geotiff(bcor,name1)
             dicto["grid{0}".format(n)] = bcor
             os.remove(tmp + 'tmp1.tif')

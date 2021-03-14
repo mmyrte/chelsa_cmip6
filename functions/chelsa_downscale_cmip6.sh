@@ -1,19 +1,19 @@
 #!/bin/bash
-MODEL=$1
-TABLE=$2
-ACTIVITY=$3
-SSP=$4
-MEMBER=$5
-REFPS=$6
-REFPE=$7
-FEFPS=$8
-FEFPE=$9
-TEMP=$10
-OUTPUT=$11
-YMIN=$12
-YMAX=$13
-XMIN=$14
-XMAX=$15
+MODEL=${1}
+TABLE=${2}
+ACTIVITY=${3}
+SSP=${4}
+MEMBER=${5}
+REFPS=${6}
+REFPE=${7}
+FEFPS=${8}
+FEFPE=${9}
+TEMP=${10}
+OUTPUT=${11}
+YMIN=${12}
+YMAX=${13}
+XMIN=${14}
+XMAX=${15}
 if [ -z "$1" ]
 then
 echo 'chelsa_downscale_cmip6.sh version 1.0
