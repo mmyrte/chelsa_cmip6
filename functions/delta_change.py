@@ -21,8 +21,8 @@ process = psutil.Process(os.getpid())
 ######################################################################
 ap = argparse.ArgumentParser(
     description='''# This python script creates monthly high-resolution 
-    for min-, max-, and mean temperature, and precipitation rate as well
-    as bioclimatic variables from anomalies and using CHELSA V2.1 as 
+    for min-, max-, and mean temperature, and precipitation rate 
+    variables from anomalies and using CHELSA V2.1 as 
     baseline high resolution climatology. 
     Dependencies for ubuntu_18.04:
     libwxgtk3.0-dev libtiff5-dev libgdal-dev libproj-dev 
@@ -33,14 +33,13 @@ ap = argparse.ArgumentParser(
     python-pip cdsapi saga_gis-7.6.0
     All dependencies are resolved in the chelsa_V2.1.cont singularity container
     Tested with: singularity version 3.3.0-809.g78ec427cc
-    Tested with: singularity version 3.3.0-809.g78ec427cc
     ''',
     epilog='''author: Dirk N. Karger, dirk.karger@wsl.ch, Version 2.1'''
 )
 ######################################################################
 # Parse Arguemnts
 ######################################################################
-debugging = 1 #turn local debugging on/off
+debugging = 0 #turn local debugging on/off
 if debugging == 1:
     source1     = 'GFDL-ESM4'
     table1      = 'Amon'
@@ -74,7 +73,6 @@ if debugging != 1:
     ap.add_argument('-xx', '--xmax', type=float, help="eastern boundary of the extent, WGS84 lat. lon., float")
     ap.add_argument('-ym', '--ymin', type=float, help="southern boundary of the extent, WGS84 lat. lon., float")
     ap.add_argument('-yx', '--ymax', type=float, help="northern boundary of the extent, WGS84 lat. lon., float")
-
     args = ap.parse_args()
     print(args)
     source1   = args.source

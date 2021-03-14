@@ -37,7 +37,7 @@ ap = argparse.ArgumentParser(
 ######################################################################
 # Parse Arguemnts
 ######################################################################
-debugging = 1 #turn local debugging on/off
+debugging = 0 #turn local debugging on/off
 if debugging == 1:
     source1     = 'GFDL-ESM4'
     table1      = 'Amon'

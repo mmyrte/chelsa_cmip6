@@ -16,7 +16,17 @@ XMIN=$14
 XMAX=$15
 if [ -z "$1" ]
 then
-'   Source model (GCM), e.g. GFDL-ESM4, string
+echo 'chelsa_downscale_cmip6.sh version 1.0
+    (c) Dirk Nikolaus Karger
+    This script creates monthly anomalies
+    for min-, max-, and mean temperature, and precipitation rate.
+    The output directory needs the following. It automatically
+    gets CMIP6 data from the google cloud storage from pangeo. It calls
+    two python scripts. Dependencies are resolvedn in ubuntu_py_cmip6.cont
+    and chelsa_V2.1.cont. Tested with: singularity version 3.3.0-809.g78ec427cc
+    and intakes it ("https://raw.githubusercontent.com/NCAR/intake-esm-datastore/master/catalogs/pangeo-cmip6.json")
+    The script only works with models available at pangeo.
+    Use the following way: chelsa_downscale_cmip6.sh Source model (GCM), e.g. GFDL-ESM4, string
     table id, e.g. Amon, string
     activity id, e.g. ScenarioMIP, string
     experiment id, e.g. ssp585, string
