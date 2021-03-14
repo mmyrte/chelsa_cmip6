@@ -12,9 +12,9 @@
 # Import modules
 ######################################################################
 
-import saga_api, sys, os, argparse, datetime, os.path, cdsapi, psutil, shutil
+import saga_api, requests, sys, os, argparse, datetime, os.path, cdsapi, psutil, shutil
+from osgeo import gdal
 process = psutil.Process(os.getpid())
-
 
 ######################################################################
 # Get the command line arguments
@@ -52,6 +52,10 @@ if debugging == 1:
     fefps       = '2041-01-01'
     fefpe       = '2070-12-31'
     tmp = '/home/karger/scratch/'
+    ymin = 46.0
+    ymax = 47.5
+    xmin = 5.3
+    xmax = 10.4
 
 if debugging != 1:
     ap.add_argument('-s','--source', type=str, help="Source model (GCM), e.g. GFDL-ESM4, string")
@@ -89,44 +93,34 @@ def Load_Tool_Libraries(Verbose):
     else:                  # Linux
         saga_api.SG_Get_Tool_Library_Manager().Add_Directory('/usr/local/lib/saga/', False)        # Or set the Tool directory like this!
     saga_api.SG_UI_Msg_Lock(False)
-
     if Verbose == True:
                 print 'Python - Version ' + sys.version
                 print saga_api.SAGA_API_Get_Version()
                 print 'number of loaded libraries: ' + str(saga_api.SG_Get_Tool_Library_Manager().Get_Count())
                 print
-
     return saga_api.SG_Get_Tool_Library_Manager().Get_Count()
 
 def load_sagadata(path_to_sagadata):
-
     saga_api.SG_Set_History_Depth(0)    # History will not be created
     saga_api_dataobject = 0             # initial value
-
     # CSG_Grid -> Grid
     if any(s in path_to_sagadata for s in (".sgrd", ".sg-grd", "sg-grd-z")):
         saga_api_dataobject = saga_api.SG_Get_Data_Manager().Add_Grid(unicode(path_to_sagadata))
-
     # CSG_Grids -> Grid Collection
     if any(s in path_to_sagadata for s in ("sg-gds", "sg-gds-z")):
         saga_api_dataobject = saga_api.SG_Get_Data_Manager().Add_Grids(unicode(path_to_sagadata))
-
     # CSG_Table -> Table
     if any(s in path_to_sagadata for s in (".txt", ".csv", ".dbf")):
         saga_api_dataobject = saga_api.SG_Get_Data_Manager().Add_Table(unicode(path_to_sagadata))
-
     # CSG_Shapes -> Shapefile
     if '.shp' in path_to_sagadata:
         saga_api_dataobject = saga_api.SG_Get_Data_Manager().Add_Shapes(unicode(path_to_sagadata))
-
     # CSG_PointCloud -> Point Cloud
     if any(s in path_to_sagadata for s in (".spc", ".sg-pts", ".sg-pts-z")):
         saga_api_dataobject = saga_api.SG_Get_Data_Manager().Add_PointCloud(unicode(path_to_sagadata))
-
     if saga_api_dataobject == None or saga_api_dataobject.is_Valid() == 0:
         print 'ERROR: loading [' + path_to_sagadata + ']'
         return 0
-
     print 'File: [' + path_to_sagadata + '] has been loaded'
     return saga_api_dataobject
 
@@ -137,22 +131,18 @@ def import_ncdf(ncdffile):
     if Tool == None:
         print 'Failed to create tool: Import NetCDF'
         return False
-
     Parm = Tool.Get_Parameters()
     Parm('FILE').Set_Value(ncdffile)
     Parm('SAVE_FILE').Set_Value(False)
     Parm('SAVE_PATH').Set_Value('')
-    Parm('TRANSFORM').Set_Value(False)
+    Parm('TRANSFORM').Set_Value(True)
     Parm('RESAMPLING').Set_Value('Nearest Neighbour')
-
     print 'Executing tool: ' + Tool.Get_Name().c_str()
     if Tool.Execute() == False:
         print 'failed'
         return False
     print 'okay'
-
     #_____________________________________
-
     output = Tool.Get_Parameter(saga_api.CSG_String('GRIDS')).asGridList()
     return output
 
@@ -318,11 +308,140 @@ def grid_calculatorX(obj1,xobj2,equ):
 
     return Data
 
+def clip_grid(obj,xmin,xmax,ymin,ymax):
+    #_____________________________________
+    # Create a new instance of tool 'Clip Grids'
+    Tool = saga_api.SG_Get_Tool_Library_Manager().Create_Tool('grid_tools', '31')
+    if Tool == None:
+        print('Failed to create tool: Clip Grids')
+        return False
+
+    Tool.Get_Parameters().Reset_Grid_System()
+
+    Tool.Get_Parameter('GRIDS').asList().Add_Item(obj.asGrid())
+    Tool.Set_Parameter('EXTENT', 0)
+    #Tool.Set_Parameter('GRIDSYSTEM', saga_api.CSG_Grid_System(0.000000, 0.000000, 0.000000, 0, 0))
+    Tool.Set_Parameter('INTERIOR', False)
+    Tool.Set_Parameter('XMIN', xmin)
+    Tool.Set_Parameter('XMAX', xmax)
+    Tool.Set_Parameter('YMIN', ymin)
+    Tool.Set_Parameter('YMAX', ymax)
+    Tool.Set_Parameter('BUFFER', 0.000000)
+
+    print('Executing tool: ' + Tool.Get_Name().c_str())
+    if Tool.Execute() == False:
+        print('failed')
+        return False
+    print('okay')
+    res = Tool.Get_Parameter(saga_api.CSG_String('CLIPPED')).asGridList()
+    #res = Tool.Get_Parameter('CLIPPED').asList.asGrid()
+    return res
+
+def import_gdal(File):
+    #_____________________________________
+    # Create a new instance of tool 'Import Raster'
+    Tool = saga_api.SG_Get_Tool_Library_Manager().Create_Tool('io_gdal', '0')
+    if Tool == None:
+        print 'Failed to create tool: Import Raster'
+        return False
+
+    Parm = Tool.Get_Parameters()
+    Parm('FILES').Set_Value(File)
+    Parm('MULTIPLE').Set_Value('automatic')
+    Parm('TRANSFORM').Set_Value(False)
+    Parm('RESAMPLING').Set_Value('Nearest Neighbour')
+
+    print 'Executing tool: ' + Tool.Get_Name().c_str()
+    if Tool.Execute() == False:
+        print 'failed'
+        return False
+    print 'okay'
+
+    #_____________________________________
+    output = Tool.Get_Parameter(saga_api.CSG_String('GRIDS')).asGridList().Get_Grid(0)
+    # _____________________________________
+
+    return output
+
+def Run_SAGA_Tool(File):
+    #_____________________________________
+    # Create a new instance of tool 'Clip Grids'
+    Tool = saga_api.SG_Get_Tool_Library_Manager().Create_Tool('grid_tools', '31')
+    if Tool == None:
+        print('Failed to create tool: Clip Grids')
+        return False
+
+    Tool.Get_Parameters().Reset_Grid_System()
+
+    Tool.Get_Parameter('GRIDS').asList().Add_Item('Grid input list')
+    Tool.Set_Parameter('EXTENT', 'user defined')
+    Tool.Set_Parameter('GRIDSYSTEM', saga_api.CSG_Grid_System(0.000000, 0.000000, 0.000000, 0, 0))
+    Tool.Set_Parameter('SHAPES', 'Shapes input')
+    Tool.Set_Parameter('POLYGONS', 'Shapes input')
+    Tool.Set_Parameter('INTERIOR', False)
+    Tool.Set_Parameter('XMIN', 0.000000)
+    Tool.Set_Parameter('XMAX', 0.000000)
+    Tool.Set_Parameter('YMIN', 0.000000)
+    Tool.Set_Parameter('YMAX', 0.000000)
+    Tool.Set_Parameter('NX', 1)
+    Tool.Set_Parameter('NY', 1)
+    Tool.Set_Parameter('BUFFER', 0.000000)
+
+    print('Executing tool: ' + Tool.Get_Name().c_str())
+    if Tool.Execute() == False:
+        print('failed')
+        return False
+    print('okay')
+
+    #_____________________________________
+    # Save results to file:
+    Path = os.path.split(File)[0] + os.sep
+
+    List = Tool.Get_Parameter('CLIPPED').asList()
+    Name = Path + List.Get_Name()
+    for i in range(0, List.Get_Data_Count()):
+        List.Get_Data(i).Save(Name + str(i) + '.sg-grd-z')
+
+    #_____________________________________
+    # remove this tool instance, if you don't need it anymore
+    saga_api.SG_Get_Tool_Library_Manager().Delete_Tool(Tool)
+
+    # job is done, free memory resources
+    saga_api.SG_Get_Data_Manager().Delete_All()
+
+    return True
 
 
+######################################################################
+# Script
+######################################################################
 
+if __name__ == '__main__':
+    saga_api.SG_Get_Data_Manager().Delete_All()  # make sure the data manager is empty
+    Load_Tool_Libraries(True)
 
+    vars = ['tas' , 'tasmax' , 'tasmin' , 'pr']
 
+    #for var in vars:
+
+    var = 'tas'
+        #load anomalies
+    ano = import_ncdf(tmp + var + 'ano_tmp.nc')
+
+    #for n in range(2,13):
+        n=2
+        month=n-1
+        ano_n = ano.asGridList().Get_Grid(n)
+        ano_3 = change_latlong360(ano_n,0)
+        ano_p = gridvalues_to_points(ano_3)
+
+        url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/'+var+'/CHELSA_'+var+'_'+'%02d' % (month,)+'_1981-2010_V.2.1.tif'
+        chfiles = requests.get(url)
+
+        g1 = import_gdal(tmp+'tmp1.tif')
+        g1c = clip_grid(g1,xmin,xmax,ymin,ymax)
+
+        bias =
 
 
 
