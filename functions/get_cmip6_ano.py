@@ -88,35 +88,36 @@ def calc_anomaly(hist_c,fut_c,var):
 ######################################################################
 # read the CMIP 6 catalogue and get data
 ######################################################################
-url = "https://raw.githubusercontent.com/NCAR/intake-esm-datastore/master/catalogs/pangeo-cmip6.json" #set url
-df_esm = intake.open_esm_datastore(url) # open the catalog
-vars = ['tas', 'tasmax', 'tasmin', 'pr'] # vector of required variables
-for var1 in vars:
-    model = df_esm.search(activity_id=activity1,
-                            experiment_id=ssp1,
-                            variable_id=var1,
-                            source_id=source1,
-                            member_id=member1,
-                            table_id=table1
-                           )
-    model_cat = model.to_dataset_dict() # create dataset dictionary
-    hist = df_esm.search(activity_id='CMIP',
-                            experiment_id='historical',
-                            variable_id=var1,
-                            source_id=source1,
-                            member_id=member1,
-                            table_id=table1
-                           )
-    hist_cat = hist.to_dataset_dict() # create dataset dictionary
-    key_model, value = list(model_cat.items())[0] # get key of the model run
-    model_ds = model_cat[key_model]
-    key_hist, value = list(hist_cat.items())[0] # get key of the hist run
-    hist_ds = hist_cat[key_hist]
-    hist_monthly_avr = hist_ds.sel(time=slice(refps,refpe)).groupby("time.month").mean("time") # select time and get montly climatologies
-    fut_monthly_avr  = model_ds.sel(time=slice(fefps,fefpe)).groupby("time.month").mean("time") # select time and get montly climatologies
-    ano1 = calc_anomaly(hist_monthly_avr,fut_monthly_avr,var1) # calculate anomaly
-    name1 = tmp + var1 + 'ano_tmp.nc' #set tmp name
-    ano1.to_netcdf(path= name1) #save to ncdf in tmp
+if __name__ == '__main__':
+    url = "https://raw.githubusercontent.com/NCAR/intake-esm-datastore/master/catalogs/pangeo-cmip6.json" #set url
+    df_esm = intake.open_esm_datastore(url) # open the catalog
+    vars = ['tas', 'tasmax', 'tasmin', 'pr'] # vector of required variables
+    for var1 in vars:
+        model = df_esm.search(activity_id=activity1,
+                                experiment_id=ssp1,
+                                variable_id=var1,
+                                source_id=source1,
+                                member_id=member1,
+                                table_id=table1
+                               )
+        model_cat = model.to_dataset_dict() # create dataset dictionary
+        hist = df_esm.search(activity_id='CMIP',
+                                experiment_id='historical',
+                                variable_id=var1,
+                                source_id=source1,
+                                member_id=member1,
+                                table_id=table1
+                               )
+        hist_cat = hist.to_dataset_dict() # create dataset dictionary
+        key_model, value = list(model_cat.items())[0] # get key of the model run
+        model_ds = model_cat[key_model]
+        key_hist, value = list(hist_cat.items())[0] # get key of the hist run
+        hist_ds = hist_cat[key_hist]
+        hist_monthly_avr = hist_ds.sel(time=slice(refps,refpe)).groupby("time.month").mean("time") # select time and get montly climatologies
+        fut_monthly_avr  = model_ds.sel(time=slice(fefps,fefpe)).groupby("time.month").mean("time") # select time and get montly climatologies
+        ano1 = calc_anomaly(hist_monthly_avr,fut_monthly_avr,var1) # calculate anomaly
+        name1 = tmp + var1 + 'ano_tmp.nc' #set tmp name
+        ano1.to_netcdf(path= name1) #save to ncdf in tmp
 
 
 
