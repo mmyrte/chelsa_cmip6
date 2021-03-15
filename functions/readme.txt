@@ -46,4 +46,4 @@ XMIN=5.3
 XMAX=10.4
 
 # You can run the script in the following way for example
-bash chelsa_downscale_cmip6.sh GFDL-ESM4 Amon ScenarioMIP ssp585 r1i1p1f1 1981-01-01 2010-12-31 2041-01-01 2070-01-01 /home/$USER/scratch/ /home/$USER/output/ 46.0 47.5 5.3 10.4
+bash chelsa_downscale_cmip6.sh GFDL-ESM4 Amon ScenarioMIP ssp585 r1i1p1f1 1981-01-01 2010-12-31 2041-01-01 2070-01-31 /home/$USER/scratch/ /home/$USER/output/ 46.0 47.5 5.3 10.4
