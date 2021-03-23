@@ -183,7 +183,7 @@ class clim_class:
         """Annual Precipitation Sum"""
         res_arr = xr.apply_ufunc(self._sum_,
                                  self.pr,
-                                 input_core_dims=[['month'], ['month']],
+                                 input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
                                  output_dtypes=[np.float32])
@@ -191,9 +191,9 @@ class clim_class:
 
     def bio13(self):
         """Precipitation of wettest month"""
-        res_arr = xr.apply_ufunc(self._max_(),
+        res_arr = xr.apply_ufunc(self._max_,
                                  self.pr,
-                                 input_core_dims=[['month'], ['month']],
+                                 input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
                                  output_dtypes=[np.float32])
@@ -203,16 +203,17 @@ class clim_class:
         """Precipitation of driest month"""
         res_arr = xr.apply_ufunc(self._min_,
                                  self.pr,
-                                 input_core_dims=[['month'], ['month']],
+                                 input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
                                  output_dtypes=[np.float32])
+        return res_arr
 
     def bio15(self):
         """Precipitation Seasonality"""
-        res_arr = xr.apply_ufunc(self._sum_,
+        res_arr = xr.apply_ufunc(self._cv_,
                                  self.pr,
-                                 input_core_dims=[['month'], ['month']],
+                                 input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
                                  output_dtypes=[np.float32])
