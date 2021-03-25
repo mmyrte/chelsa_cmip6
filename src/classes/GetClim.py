@@ -2,9 +2,12 @@
 #from __future__ import print_function
 import requests
 import xml.etree.ElementTree as ET
-import numpy
+import numpy as np
 import xarray as xr
 import rasterio
+import pandas as pd
+import zarr
+import gcsfs
 
 
 def _esgf_search_(server="https://esgf-node.llnl.gov/esg-search/search",
@@ -57,6 +60,26 @@ def _esgf_search_(server="https://esgf-node.llnl.gov/esg-search/search",
     return sorted(all_files)
 
 
+def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, source_id, member_id):
+    """Get CMIP model from Google"""
+    gcs = gcsfs.GCSFileSystem(token='anon')
+    df = pd.read_csv('https://storage.googleapis.com/cmip6/cmip6-zarr-consolidated-stores.csv')
+    search_string = "activity_id == '" + activity_id + "' & table_id == '" + table_id + "' & variable_id == '" + variable_id + "' & experiment_id == '" + experiment_id + "' & institution_id == '" + institution_id + "' & source_id == '" + source_id + "' & member_id == '" + member_id + "'"
+    df_ta = df.query(search_string)
+    # get the path to a specific zarr store (the first one from the dataframe above)
+    zstore = df_ta.zstore.values[-1]
+    # create a mutable-mapping-style interface to the store
+    mapper = gcs.get_mapper(zstore)
+    # open it using xarray and zarr
+    ds = xr.open_zarr(mapper, consolidated=True)
+    try:
+        ds['time'] = np.sort(ds['time'].values)
+    except Exception:
+        pass
+
+    return ds
+
+
 class interpol:
     """Interpolation class"""
     def __init__(self, ds, template):
@@ -102,7 +125,7 @@ class chelsaV2:
         return res
 
 
-class get_cmip6:
+class cmip6_clim:
     """ climatology class for monthly climatologies """
     def __init__(self, activity_id, table_id,
                  variable_id, experiment_id,
@@ -122,117 +145,24 @@ class get_cmip6:
         self.refpe = ref_enddate #'2010-12-31'
         self.fefps = fut_startdate #'2041-01-01'
         self.fefpe = fut_enddate #'2070-12-31'
-
-    def _calc_anomaly_(self, hist_c, fut_c):
-        if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
-            res = hist_c - fut_c  # additive anomaly
-        if self.variable_id == 'pr':
-            res = (hist_c + 0.001) / (fut_c + 0.001)  # multiplicative anomaly
-        return res
-
-
-    def get_cmip(self, x):
-        """Get CMIP model from ESGF"""
-        result = _esgf_search_(activity_id=self.activity_id,
-                               table_id=self.table_id,
-                               variable_id=self.variable_id,
-                               experiment_id=self.experiment_id,
-                               institution_id=self.institution_id,
-                               source_id=self.source_id,
-                               member_id=self.member_id)
-        files_to_open = result
-        ds = xr.open_mfdataset(files_to_open, combine='by_coords')
-        return ds
+        self.future_period = _get_cmip(self.activity_id, self.table_id, self.variable_id, self.experiment_id, self.institution_id, self.source_id, self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
+        print("future data loaded... ")
+        #self.historical_data = self.get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.member_id)
+        print("hist data loaded... ")
+        self.historical_period = _get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.source_id, self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
+        print("historical period set... ")
+        self.reference_period = _get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.source_id, self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
+        print("reference period set... done")
 
     def get_anomaly(self):
         """Get climatological anomaly"""
-        sspx = self.get_cmip(self.experiment_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
-        refp = self.get_cmip('historical').sel(time=slice('1981-01-01', '2010-12-31')).groupby("time.month").mean("time")
-        hist = self.get_cmip('historical').sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
-        ano1 = self._calc_anomaly_(hist, refp)
-        ano2 = self._calc_anomaly_(sspx, refp)
         if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
-            res = ano1 - ano2  # additive anomaly
+            res = self.future_period - self.reference_period + self.reference_period - self.historical_period# additive anomaly
         if self.variable_id == 'pr':
-            res = (ano1 + 0.001) / (ano2 + 0.001)  # multiplicative anomaly
-        return res
+            res = (self.future_period + 0.001) / (self.reference_period + 0.001) * (self.reference_period + 0.001) / (self.historical_period + 0.001)  # multiplicative anomaly
 
-
-
-
-
-
-
-cmip = get_cmip6('CMIP', 'Amon',
-                 'tas', 'historical',
-                 "NCAR", "CESM2",
-                 "r10i1p1f1", '1981-01-01',
-                 '2010-12-31', '2041-01-01',
-                 '2070-12-31')
-
-cmip_ano = cmip.get_anomaly()
-
-
-ch = chelsaV2(5.3,10.4,46,47.5, 'tas').get_chelsa()
-
-ano_inter = interpol(cmip_ano,ch).interpolate()
-ano_inter.load().to_netcdf("/mnt/storage/karger/tas1.nc")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def get_cmip():
-    """Get CMIP model from ESGF"""
-    result = _esgf_search_(activity_id='CMIP', table_id='Amon',
-                 variable_id='tas', experiment_id='historical',
-                 institution_id="NCAR", source_id="CESM2",
-                 member_id="r10i1p1f1")
-    files_to_open = result
-    ds = xr.open_mfdataset(files_to_open, combine='by_coords')
-    return ds
-
-
-result = _esgf_search_(activity_id='CMIP', table_id='Amon',
-                     variable_id='tas', experiment_id='historical',
-                     institution_id="NCAR", source_id="CESM2",
-                     member_id="r10i1p1f1")
-
-files_to_open = result
-ds = xr.open_mfdataset(files_to_open, combine='by_coords')
-
-
-
-
-
-    variable_id = 'tas'
-    def get_chelsa():
-        a = []
-        for month in range(1,13):
-            url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/' + variable_id + '/CHELSA_' + variable_id + '_' + '%02d' % (month,) + '_1981-2010_V.2.1.tif'
-            a.append(url)
-
-        ds = xr.concat([xr.open_rasterio(i) for i in a],'time')
-        return ds
-
-
-
-
-ch = get_chelsa()
-
+        res1 = res.assign_coords({"lon": (((res.lon) % 360) - 180)})
+        return res1
 
 
 

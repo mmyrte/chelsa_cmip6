@@ -37,3 +37,49 @@ for n in range(1,20):
     a = getattr(c1, 'bio' + str(n))
     a().to_netcdf('/mnt/storage/karger/scratch/bio' + str(n) + '.nc')
 
+
+
+
+
+cmip_tas = cmip6_clim('ScenarioMIP', 'Amon',
+                 'tas', 'ssp585',
+                 "MPI-M", "MPI-ESM1-2-LR",
+                 "r1i1p1f1", '1981-01-15',
+                 '2010-12-15', '2041-01-15',
+                 '2070-12-15')
+
+cmip_tasmax = cmip6_clim('ScenarioMIP', 'Amon',
+                 'tasmax', 'ssp585',
+                 "MPI-M", "MPI-ESM1-2-LR",
+                 "r1i1p1f1", '1981-01-15',
+                 '2010-12-15', '2041-01-15',
+                 '2070-12-15')
+
+cmip_tasmin = cmip6_clim('ScenarioMIP', 'Amon',
+                 'tasmin', 'ssp585',
+                 "MPI-M", "MPI-ESM1-2-LR",
+                 "r1i1p1f1", '1981-01-15',
+                 '2010-12-15', '2041-01-15',
+                 '2070-12-15')
+
+cmip_pr = cmip6_clim('ScenarioMIP', 'Amon',
+                 'pr', 'ssp585',
+                 "MPI-M", "MPI-ESM1-2-LR",
+                 "r1i1p1f1", '1981-01-15',
+                 '2010-12-15', '2041-01-15',
+                 '2070-12-15')
+
+cmip_tasmax_ano = cmip_tasmax.get_anomaly()
+
+
+
+ch = chelsaV2(5.3,10.4,46,47.5, 'tas').get_chelsa()
+
+
+ano_inter = interpol(cmip_tasmax_ano, ch)
+
+
+
+
+
+
