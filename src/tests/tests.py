@@ -18,11 +18,29 @@ class ChelsaClimat:
 
 
 
+ch_climat = ChelsaClimat(5.3,10.4,46,47.5)
+cm_climat = CmipClimat('ScenarioMIP', 'Amon',
+                 'ssp585',
+                 'MPI-M', 'MPI-ESM1-2-LR',
+                 'r1i1p1f1', '1981-01-15',
+                 '2010-12-15', '2041-01-15',
+                 '2070-12-15')
 
 
+cm_ano_tas = cm_climat.tas.get_anomaly()
+cm_ano_tas_inter = interpol(cm_ano_tas,ch_climat.tas).interpolate()
 
+cm_ano_tas_inter = cm_ano_tas_inter.drop('lat')
+cm_ano_tas_inter = cm_ano_tas_inter.drop('lon')
+cm_ano_tas_inter = cm_ano_tas_inter.drop('height')
+cm_ano_tas_inter = cm_ano_tas_inter.drop('lat_bnds')
+cm_ano_tas_inter = cm_ano_tas_inter.drop('lon_bnds')
+ch_cli_tas = ch_climat.tas.to_dataset(name="tas")
+ch_cli_tas = ch_cli_tas.rename({'time': 'month'})
+ch_cli_tas = ch_cli_tas.drop('band')
 
-
+x1 = ch_cli_tas + cm_ano_tas_inter
+x1.to_netcdf("/mnt/storage/karger/test.nc")
 
 
 
@@ -71,46 +89,24 @@ for n in range(1,20):
 
 
 
-cmip_tas = cmip6_clim('ScenarioMIP', 'Amon',
-                 'tas', 'ssp585',
-                 "MPI-M", "MPI-ESM1-2-LR",
-                 "r1i1p1f1", '1981-01-15',
-                 '2010-12-15', '2041-01-15',
-                 '2070-12-15')
-
-cmip_tasmax = cmip6_clim('ScenarioMIP', 'Amon',
-                 'tasmax', 'ssp585',
-                 "MPI-M", "MPI-ESM1-2-LR",
-                 "r1i1p1f1", '1981-01-15',
-                 '2010-12-15', '2041-01-15',
-                 '2070-12-15')
-
-cmip_tasmin = cmip6_clim('ScenarioMIP', 'Amon',
-                 'tasmin', 'ssp585',
-                 "MPI-M", "MPI-ESM1-2-LR",
-                 "r1i1p1f1", '1981-01-15',
-                 '2010-12-15', '2041-01-15',
-                 '2070-12-15')
-
-cmip_pr = cmip6_clim('ScenarioMIP', 'Amon',
-                 'pr', 'ssp585',
-                 "MPI-M", "MPI-ESM1-2-LR",
-                 "r1i1p1f1", '1981-01-15',
-                 '2010-12-15', '2041-01-15',
-                 '2070-12-15')
-
 cmip_tasmax_ano = cmip_tasmax.get_anomaly()
 
 
 
-
-
-ch_climat = chelsa(5.3,10.4,46,47.5)
+testme = ch_climat.tasmax.to_dataset(name="tasmax")
 
 
 ano_inter = interpol(cmip_tasmax_ano, ch)
 
-
+anox = ano_inter.interpolate()
+anox = anox.drop('lat')
+anox = anox.drop('lon')
+anox = anox.drop('lat_bnds')
+anox = anox.drop('lon_bnds')
+anox.to_netcdf("/mnt/storage/karger/anox.nc")
+testme = testme.drop('band')
+anocor = anox + testme
+anocor.to_netcdf("/mnt/storage/karger/anocor.nc")
 
 
 
