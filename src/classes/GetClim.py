@@ -10,7 +10,7 @@ import zarr
 import gcsfs
 
 
-def _esgf_search_(server="https://esgf-node.llnl.gov/esg-search/search",
+def _esgf_search(server="https://esgf-node.llnl.gov/esg-search/search",
                   files_type="OPENDAP", local_node=True, project="CMIP6",
                   verbose=False, format="application%2Fsolr%2Bjson",
                   use_csrf=False, **search):
@@ -165,5 +165,97 @@ class cmip6_clim:
         return res1
 
 
+class ChelsaClimat:
+    """chelsa class"""
+    def __init__(self, xmin, xmax, ymin, ymax):
+        """ Create a set of baseline clims """
+        self.tas = chelsaV2(xmin, xmax, ymin, ymax, 'tas').get_chelsa()
+        self.tasmax = chelsaV2(xmin, xmax, ymin, ymax, 'tasmax').get_chelsa()
+        self.tasmin = chelsaV2(xmin, xmax, ymin, ymax, 'tasmin').get_chelsa()
+        self.pr = chelsaV2(xmin, xmax, ymin, ymax, 'pr').get_chelsa()
 
 
+class CmipClimat:
+    """ climatology class for monthly cmip 6 climatologies """
+
+    def __init__(self, activity_id, table_id,
+                 experiment_id,
+                 institution_id, source_id,
+                 member_id, ref_startdate,
+                 ref_enddate, fut_startdate,
+                 fut_enddate):
+        """ Create a set of baseline clims """
+        self.pr =  cmip6_clim(activity_id, table_id,
+                             'pr', experiment_id,
+                             institution_id, source_id,
+                             member_id, ref_startdate,
+                             ref_enddate, fut_startdate,
+                             fut_enddate)
+        self.tas = cmip6_clim(activity_id, table_id,
+                             'tas', experiment_id,
+                             institution_id, source_id,
+                             member_id, ref_startdate,
+                             ref_enddate, fut_startdate,
+                             fut_enddate)
+        self.tasmax = cmip6_clim(activity_id, table_id,
+                             'tasmax', experiment_id,
+                             institution_id, source_id,
+                             member_id, ref_startdate,
+                             ref_enddate, fut_startdate,
+                             fut_enddate)
+        self.tasmin = cmip6_clim(activity_id, table_id,
+                             'tasmin', experiment_id,
+                             institution_id, source_id,
+                             member_id, ref_startdate,
+                             ref_enddate, fut_startdate,
+                             fut_enddate)
+
+
+class AnoCorClim:
+    """ climatology class for monthly cmip 6 climatologies """
+
+    def __init__(self, chelsa, cmip):
+        """ Create delta change climatologies """
+        self.chelsa = chelsa
+        self.cmip = cmip
+
+        self.tas_ano = self.cmip.tas.get_anomaly()
+        self.tasmax_ano = self.cmip.tasmax.get_anomaly()
+        self.tasmin_ano = self.cmip.tasmin.get_anomaly()
+        self.pr_ano = self.cmip.pr.get_anomaly()
+
+        self.tas_ano_h = interpol(self.tas_ano, self.chelsa.tas).interpolate()
+        self.tasmax_ano_h = interpol(self.tasmax_ano, self.chelsa.tasmax).interpolate()
+        self.tasmin_ano_h = interpol(self.tasmin_ano, self.chelsa.tasmin).interpolate()
+        self.pr_ano_h = interpol(self.pr_ano, self.chelsa.pr).interpolate()
+
+        self.tas = self.chelsa.tas + self.tas_ano_h
+        self.tasmax = self.chelsa.tasmax + self.tasmax_ano_h
+        self.tasmin = self.chelsa.tasmin + self.tasmin_ano_h
+        self.pr = self.chelsa.pr / self.pr_ano_h
+
+
+delta_clims = AnoCorClim(ch_climat, cmipx)
+
+import matplotlib.pyplot as plt
+x1 = delta_clims.chelsa.tas + delta_clims.tas_ano_h.tas
+
+
+x1.to_netcdf("/mnt/storage/karger/xx1.nc")
+
+delta_clims.chelsa.tas.to_netcdf("/mnt/storage/karger/xx1.nc")
+delta_clims.cmip.tas.to_netcdf("/mnt/storage/karger/xy1.nc")
+
+
+
+
+
+
+
+
+cmipx = CmipClimat('ScenarioMIP', 'Amon',
+                 'ssp585',
+                 "MPI-M", "MPI-ESM1-2-LR",
+                 "r1i1p1f1", '1981-01-15',
+                 '2010-12-15', '2041-01-15',
+                 '2070-12-15')

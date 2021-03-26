@@ -1,7 +1,37 @@
 import xarray as xr
-import pyesgf
+
 import numpy as np
 from src.classes import BioClim
+from src.classes import GetClim
+
+
+class ChelsaClimat:
+    """chelsa class"""
+    def __init__(self, xmin, xmax, ymin, ymax):
+        """ Create a set of baseline clims """
+        self.tas = chelsaV2(xmin, xmax, ymin, ymax, 'tas').get_chelsa()
+        self.tasmax = chelsaV2(xmin, xmax, ymin, ymax, 'tasmax').get_chelsa()
+        self.tasmin = chelsaV2(xmin, xmax, ymin, ymax, 'tasmin').get_chelsa()
+        self.pr = chelsaV2(xmin, xmax, ymin, ymax, 'pr').get_chelsa()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 cube_location1 = '/mnt/storage/karger/W5E5/tasmin_W5E5v1.0_19790101-19801231.nc'
@@ -73,7 +103,9 @@ cmip_tasmax_ano = cmip_tasmax.get_anomaly()
 
 
 
-ch = chelsaV2(5.3,10.4,46,47.5, 'tas').get_chelsa()
+
+
+ch_climat = chelsa(5.3,10.4,46,47.5)
 
 
 ano_inter = interpol(cmip_tasmax_ano, ch)
