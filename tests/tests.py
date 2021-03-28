@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
-import xarray as xr
-import numpy as np
-from src.classes import BioClim
-from src.classes import GetClim
-import datetime
+from classes import BioClim
+
 
 def main():
     ch_climat = ChelsaClimat(5.3,10.4,46,47.5)
