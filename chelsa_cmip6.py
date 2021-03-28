@@ -61,7 +61,7 @@ output = args.output
 
 def main():
     print('starting downloading CMIP data:')
-    cm_climat = CmipClimat(source_id, table_id,
+    cm_climat = CmipClimat(activity_id, table_id,
                            experiment_id,
                            institution_id, source_id,
                            member_id, refps,
