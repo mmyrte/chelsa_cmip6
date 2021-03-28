@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import xarray as xr
 import numpy as np
 
@@ -47,7 +49,7 @@ class quarter_class:
         return res_arr
 
 
-class clim_class:
+class BioClim:
     """ climatology class for monthly climatologies """
     def __init__(self, pr, tas, tasmax, tasmin):
         """ Create a set of baseline clims """
@@ -238,3 +240,4 @@ class clim_class:
         """Precipitation of Coldest Quarter"""
         res_arr = quarter_class(self.pr, self.tasmin, "sum", "mean", "min", "max").comp_quarters_array()
         return res_arr
+

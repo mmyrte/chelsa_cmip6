@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#from __future__ import print_function
+
 import requests
 import xml.etree.ElementTree as ET
 import numpy as np
@@ -141,25 +141,30 @@ class cmip6_clim:
         self.institution_id = institution_id
         self.source_id = source_id
         self.member_id = member_id
-        self.refps = ref_startdate #'1981-01-01'
-        self.refpe = ref_enddate #'2010-12-31'
-        self.fefps = fut_startdate #'2041-01-01'
-        self.fefpe = fut_enddate #'2070-12-31'
+        self.refps = ref_startdate
+        self.refpe = ref_enddate
+        self.fefps = fut_startdate
+        self.fefpe = fut_enddate
         self.future_period = _get_cmip(self.activity_id, self.table_id, self.variable_id, self.experiment_id, self.institution_id, self.source_id, self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         print("future data loaded... ")
-        #self.historical_data = self.get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.member_id)
-        print("hist data loaded... ")
         self.historical_period = _get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.source_id, self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         print("historical period set... ")
         self.reference_period = _get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.source_id, self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
         print("reference period set... done")
 
-    def get_anomaly(self):
+    def get_anomaly(self, period):
         """Get climatological anomaly"""
-        if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
-            res = self.future_period - self.reference_period + self.reference_period - self.historical_period# additive anomaly
-        if self.variable_id == 'pr':
-            res = (self.future_period + 0.001) / (self.reference_period + 0.001) * (self.reference_period + 0.001) / (self.historical_period + 0.001)  # multiplicative anomaly
+        if period == 'futr':
+            if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
+                res = self.future_period - self.reference_period # additive anomaly
+            if self.variable_id == 'pr':
+                res = (self.future_period + 0.001) / (self.reference_period + 0.001)   # multiplicative anomaly
+
+        if period == 'hist':
+            if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
+                res = self.historical_period - self.reference_period # additive anomaly
+            if self.variable_id == 'pr':
+                res = (self.historical_period + 0.001) / (self.reference_period + 0.001)   # multiplicative anomaly
 
         res1 = res.assign_coords({"lon": (((res.lon) % 360) - 180)})
         return res1
@@ -169,10 +174,8 @@ class ChelsaClimat:
     """chelsa class"""
     def __init__(self, xmin, xmax, ymin, ymax):
         """ Create a set of baseline clims """
-        self.tas = chelsaV2(xmin, xmax, ymin, ymax, 'tas').get_chelsa()
-        self.tasmax = chelsaV2(xmin, xmax, ymin, ymax, 'tasmax').get_chelsa()
-        self.tasmin = chelsaV2(xmin, xmax, ymin, ymax, 'tasmin').get_chelsa()
-        self.pr = chelsaV2(xmin, xmax, ymin, ymax, 'pr').get_chelsa()
+        for var in ['pr', 'tas', 'tasmax', 'tasmin']:
+            setattr(self, var, chelsaV2(xmin, xmax, ymin, ymax, var).get_chelsa())
 
 
 class CmipClimat:
@@ -185,6 +188,102 @@ class CmipClimat:
                  ref_enddate, fut_startdate,
                  fut_enddate):
         """ Create a set of baseline clims """
+        for var in ['pr', 'tas', 'tasmax', 'tasmin']:
+            setattr(self, var, cmip6_clim(activity_id, table_id,
+                             var, experiment_id,
+                             institution_id, source_id,
+                             member_id, ref_startdate,
+                             ref_enddate, fut_startdate,
+                             fut_enddate))
+
+
+class ChelsaClimat:
+    """chelsa class"""
+    def __init__(self, xmin, xmax, ymin, ymax):
+        """ Create a set of baseline clims """
+        self.tas = chelsaV2(xmin, xmax, ymin, ymax, 'tas').get_chelsa()
+        self.tasmax = chelsaV2(xmin, xmax, ymin, ymax, 'tasmax').get_chelsa()
+        self.tasmin = chelsaV2(xmin, xmax, ymin, ymax, 'tasmin').get_chelsa()
+        self.pr = chelsaV2(xmin, xmax, ymin, ymax, 'pr').get_chelsa()
+
+
+class DeltaChangeClim:
+    """Delta change class"""
+    def __init__(self, ChelsaClimat, CmipClimat, output=False):
+        """ Create a set of baseline clims """
+        self.output = output
+        for per in ['futr', 'hist']:
+            setattr(self, str(per + '_pr'),getattr(ChelsaClimat, 'pr').to_dataset(name='pr').rename({'time': 'month'}).drop('band') / interpol(
+                    getattr(CmipClimat, 'pr').get_anomaly('hist'), getattr(ChelsaClimat, 'pr')).interpolate())
+            for var in ['tas', 'tasmax', 'tasmin']:
+                setattr(self, str(per + '_' + var), getattr(ChelsaClimat, var).to_dataset(name=var).rename({'time': 'month'}).drop('band') - interpol(
+                        getattr(CmipClimat, var).get_anomaly(per), getattr(ChelsaClimat, var)).interpolate())
+
+        if output:
+            print('saving files to :' + output)
+            for var in ['hist_tas', 'hist_tasmax', 'hist_tasmin',
+                        'hist_pr']:
+                getattr(self, var).to_netcdf(self.output
+                                             + 'CHELSA_'
+                                             + CmipClimat.tas.institution_id
+                                             + '_' + CmipClimat.tas.source_id
+                                             + '_' + var.replace('hist_', '')
+                                             + '_' + CmipClimat.tas.experiment_id
+                                             + '_' + CmipClimat.tas.member_id
+                                             + '_' + CmipClimat.tas.refps
+                                             + '_' + CmipClimat.tas.refpe
+                                             + '.nc')
+            for var in ['futr_tas', 'futr_tasmax',
+                        'futr_tasmin', 'futr_pr']:
+                getattr(self, var).to_netcdf(self.output
+                                             + 'CHELSA_'
+                                             + CmipClimat.tas.institution_id
+                                             + '_' + CmipClimat.tas.source_id
+                                             + '_' + var.replace('futr_', '')
+                                             + '_' + CmipClimat.tas.experiment_id
+                                             + '_' + CmipClimat.tas.member_id
+                                             + '_' + CmipClimat.tas.fefps
+                                             + '_' + CmipClimat.tas.fefpe
+                                             + '.nc')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################### Trashcan
+
+
+
+
+
+
+        self.tasmax = chelsaV2(xmin, xmax, ymin, ymax, 'tasmax').get_chelsa()
+        self.tasmin = chelsaV2(xmin, xmax, ymin, ymax, 'tasmin').get_chelsa()
+        self.pr = chelsaV2(xmin, xmax, ymin, ymax, 'pr').get_chelsa()
+
+
+
+
+
+
+
+
+
         self.pr =  cmip6_clim(activity_id, table_id,
                              'pr', experiment_id,
                              institution_id, source_id,
@@ -209,53 +308,3 @@ class CmipClimat:
                              member_id, ref_startdate,
                              ref_enddate, fut_startdate,
                              fut_enddate)
-
-
-class AnoCorClim:
-    """ climatology class for monthly cmip 6 climatologies """
-
-    def __init__(self, chelsa, cmip):
-        """ Create delta change climatologies """
-        self.chelsa = chelsa
-        self.cmip = cmip
-
-        self.tas_ano = self.cmip.tas.get_anomaly()
-        self.tasmax_ano = self.cmip.tasmax.get_anomaly()
-        self.tasmin_ano = self.cmip.tasmin.get_anomaly()
-        self.pr_ano = self.cmip.pr.get_anomaly()
-
-        self.tas_ano_h = interpol(self.tas_ano, self.chelsa.tas).interpolate()
-        self.tasmax_ano_h = interpol(self.tasmax_ano, self.chelsa.tasmax).interpolate()
-        self.tasmin_ano_h = interpol(self.tasmin_ano, self.chelsa.tasmin).interpolate()
-        self.pr_ano_h = interpol(self.pr_ano, self.chelsa.pr).interpolate()
-
-        self.tas = self.chelsa.tas + self.tas_ano_h
-        self.tasmax = self.chelsa.tasmax + self.tasmax_ano_h
-        self.tasmin = self.chelsa.tasmin + self.tasmin_ano_h
-        self.pr = self.chelsa.pr / self.pr_ano_h
-
-
-delta_clims = AnoCorClim(ch_climat, cmipx)
-
-import matplotlib.pyplot as plt
-x1 = delta_clims.chelsa.tas + delta_clims.tas_ano_h.tas
-
-
-x1.to_netcdf("/mnt/storage/karger/xx1.nc")
-
-delta_clims.chelsa.tas.to_netcdf("/mnt/storage/karger/xx1.nc")
-delta_clims.cmip.tas.to_netcdf("/mnt/storage/karger/xy1.nc")
-
-
-
-
-
-
-
-
-cmipx = CmipClimat('ScenarioMIP', 'Amon',
-                 'ssp585',
-                 "MPI-M", "MPI-ESM1-2-LR",
-                 "r1i1p1f1", '1981-01-15',
-                 '2010-12-15', '2041-01-15',
-                 '2070-12-15')
