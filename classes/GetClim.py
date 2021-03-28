@@ -146,7 +146,7 @@ class cmip6_clim:
         self.fefps = fut_startdate
         self.fefpe = fut_enddate
         self.future_period = _get_cmip(self.activity_id, self.table_id, self.variable_id, self.experiment_id, self.institution_id, self.source_id, self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
-        self.future_period['month'] = [datetime.datetime(2017, month, 1) for month in ds['month'].values]
+        #self.future_period['month'] = [datetime.datetime(2017, month, 1) for month in ds['month'].values]
         print("future data loaded... ")
         self.historical_period = _get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.source_id, self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         print("historical period set... ")
