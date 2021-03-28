@@ -1,0 +1,80 @@
+#!/usr/bin/env python
+
+import xarray as xr
+import numpy as np
+from src.classes import BioClim
+from src.classes import GetClim
+import datetime
+import argparse
+
+ap = argparse.ArgumentParser(
+    description='''# This script creates monthly high-resolution 
+    for min-, max-, and mean temperature, precipitation rate 
+    and bioclimatic variables from anomalies and using CHELSA V2.1 as 
+    baseline high resolution climatology. Only works for GCMs for
+    which tas, tasmax, tasmin, and pr are available.
+    ''',
+    epilog='''author: Dirk N. Karger, dirk.karger@wsl.ch, Version 1.1'''
+)
+ap.add_argument('-s', '--source_id', type=str, help="Source model (GCM), e.g. MPI-ESM1-2-LR, string")
+ap.add_argument('-i', '--institution_id', type=str, help="Institution ID, e.g. MPI-M, string")
+ap.add_argument('-t', '--table_id', type=str, help="table id, e.g. Amon, string")
+ap.add_argument('-a', '--activity_id', type=str, help="activity id, e.g. ScenarioMIP, string")
+ap.add_argument('-e', '--experiment_id', type=str, help="experiment id, e.g. ssp585, string")
+ap.add_argument('-m', '--member_id', type=str, help="ensemble member, e.g. r1i1p1f1, string")
+ap.add_argument('-rs', '--refps', type=str,
+                help="reference period start, e.g. 1981-01-01, date format YYYY-MM-DD, string")
+ap.add_argument('-re', '--refpe', type=str,
+                help="reference period end, e.g. 2010-12-31, date format YYYY-MM-DD, string")
+ap.add_argument('-fs', '--fefps', type=str,
+                help="anomaly period start, e.g. 2041-01-01, date format YYYY-MM-DD, string")
+ap.add_argument('-fe', '--fefpe', type=str, help="anomaly period end, e.g. 2070-01-01, date format YYYY-MM-DD, string")
+ap.add_argument('-o', '--output', type=str, help="output directory, needs to exist, string")
+
+args = ap.parse_args()
+print("Downscaling:" + args)
+
+source_id = args.source_id
+institution_id = args.institution_id
+table_id = args.table_id
+activity_id = args.activity_id
+experiment_id = args.experiment_id
+member_id = args.member_id
+refps = args.refps
+refpe = args.refpe
+fefps = args.fefps
+fefpe = args.fefpe
+
+def main():
+    ch_climat = ChelsaClimat(5.3,10.4,46,47.5)
+    cm_climat = CmipClimat('ScenarioMIP', 'Amon',
+                     'ssp585',
+                     'MPI-M', 'MPI-ESM1-2-LR',
+                     'r1i1p1f1', '1981-01-15',
+                     '2010-12-15', '2041-01-15',
+                     '2070-12-15')
+
+    dc = DeltaChangeClim(ch_climat, cm_climat,'1981-01-15',
+                     '2010-12-15', '2041-01-15',
+                     '2070-12-15', '/mnt/storage/karger/')
+
+    biohist = BioClim(dc.hist_pr, dc.hist_tas, dc.hist_tasmax, dc.hist_tasmin)
+    biofutr = BioClim(dc.futr_pr, dc.futr_tas, dc.futr_tasmax, dc.futr_tasmin)
+
+    for n in range(1, 20):
+        name = '/mnt/storage/karger/' + 'CHELSA'+ '_' + cm_climat.tas.institution_id + '_' \
+               + cm_climat.tas.source_id + '_' + str('bio' + str(n)) + '_' \
+               + cm_climat.tas.experiment_id+ '_' + cm_climat.tas.member_id \
+               + '_' + cm_climat.tas.refps + '_' + cm_climat.tas.refpe + '.nc'
+        getattr(biohist, 'bio' + str(n))().to_netcdf(name)
+    for n in range(1, 20):
+        name = '/mnt/storage/karger/' + 'CHELSA'+ '_' + cm_climat.tas.institution_id + '_' \
+               + cm_climat.tas.source_id + '_' + str('bio' + str(n)) + '_' \
+               + cm_climat.tas.experiment_id+ '_' + cm_climat.tas.member_id \
+               + '_' + cm_climat.tas.fefps + '_' + cm_climat.tas.fefpe + '.nc'
+        getattr(biofutr, 'bio' + str(n))().to_netcdf(name)
+
+
+if __name__ == '__main__':
+    main()
+

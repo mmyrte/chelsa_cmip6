@@ -8,7 +8,7 @@ import rasterio
 import pandas as pd
 import zarr
 import gcsfs
-
+import datetime
 
 def _esgf_search(server="https://esgf-node.llnl.gov/esg-search/search",
                   files_type="OPENDAP", local_node=True, project="CMIP6",
@@ -146,6 +146,7 @@ class cmip6_clim:
         self.fefps = fut_startdate
         self.fefpe = fut_enddate
         self.future_period = _get_cmip(self.activity_id, self.table_id, self.variable_id, self.experiment_id, self.institution_id, self.source_id, self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
+        self.future_period['month'] = [datetime.datetime(2017, month, 1) for month in ds['month'].values]
         print("future data loaded... ")
         self.historical_period = _get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.source_id, self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         print("historical period set... ")
@@ -209,15 +210,26 @@ class ChelsaClimat:
 
 class DeltaChangeClim:
     """Delta change class"""
-    def __init__(self, ChelsaClimat, CmipClimat, output=False):
+    def __init__(self, ChelsaClimat, CmipClimat, refps, refpe, fefps, fefpe, output=False):
         """ Create a set of baseline clims """
         self.output = output
+        self.refps = refps
+        self.refpe = refpe
+        self.fefps = fefps
+        self.fefpe = fefpe
+        self.hist_year = np.mean([int(datetime.datetime.strptime(refps, '%Y-%m-%d').year), int(datetime.datetime.strptime(refpe, '%Y-%m-%d').year)]).__round__()
+        self.futr_year = np.mean([int(datetime.datetime.strptime(fefps, '%Y-%m-%d').year), int(datetime.datetime.strptime(fefpe, '%Y-%m-%d').year)]).__round__()
+
         for per in ['futr', 'hist']:
             setattr(self, str(per + '_pr'),getattr(ChelsaClimat, 'pr').to_dataset(name='pr').rename({'time': 'month'}).drop('band') / interpol(
                     getattr(CmipClimat, 'pr').get_anomaly('hist'), getattr(ChelsaClimat, 'pr')).interpolate())
             for var in ['tas', 'tasmax', 'tasmin']:
                 setattr(self, str(per + '_' + var), getattr(ChelsaClimat, var).to_dataset(name=var).rename({'time': 'month'}).drop('band') - interpol(
                         getattr(CmipClimat, var).get_anomaly(per), getattr(ChelsaClimat, var)).interpolate())
+
+        for var in ['tas', 'tasmax', 'tasmin', 'pr']:
+            getattr(self, str('futr_' + var))['month'] = [datetime.datetime(self.futr_year, month, 15) for month in getattr(self, str(per + '_' + var))['month'].values]
+            getattr(self, str('hist_' + var))['month'] = [datetime.datetime(self.hist_year, month, 15) for month in getattr(self, str(per + '_' + var))['month'].values]
 
         if output:
             print('saving files to :' + output)
@@ -257,54 +269,3 @@ class DeltaChangeClim:
 
 
 
-
-
-
-
-
-
-
-
-################### Trashcan
-
-
-
-
-
-
-        self.tasmax = chelsaV2(xmin, xmax, ymin, ymax, 'tasmax').get_chelsa()
-        self.tasmin = chelsaV2(xmin, xmax, ymin, ymax, 'tasmin').get_chelsa()
-        self.pr = chelsaV2(xmin, xmax, ymin, ymax, 'pr').get_chelsa()
-
-
-
-
-
-
-
-
-
-        self.pr =  cmip6_clim(activity_id, table_id,
-                             'pr', experiment_id,
-                             institution_id, source_id,
-                             member_id, ref_startdate,
-                             ref_enddate, fut_startdate,
-                             fut_enddate)
-        self.tas = cmip6_clim(activity_id, table_id,
-                             'tas', experiment_id,
-                             institution_id, source_id,
-                             member_id, ref_startdate,
-                             ref_enddate, fut_startdate,
-                             fut_enddate)
-        self.tasmax = cmip6_clim(activity_id, table_id,
-                             'tasmax', experiment_id,
-                             institution_id, source_id,
-                             member_id, ref_startdate,
-                             ref_enddate, fut_startdate,
-                             fut_enddate)
-        self.tasmin = cmip6_clim(activity_id, table_id,
-                             'tasmin', experiment_id,
-                             institution_id, source_id,
-                             member_id, ref_startdate,
-                             ref_enddate, fut_startdate,
-                             fut_enddate)
