@@ -1,6 +1,15 @@
 #!/usr/bin/env python
 
-from classes import BioClim
+from classes.BioClim import quarter_class
+from classes.BioClim import BioClim
+from classes.GetClim import _get_cmip
+from classes.GetClim import interpol
+from classes.GetClim import chelsaV2
+from classes.GetClim import cmip6_clim
+from classes.GetClim import ChelsaClimat
+from classes.GetClim import CmipClimat
+from classes.GetClim import DeltaChangeClim
+
 import argparse
 
 ap = argparse.ArgumentParser(

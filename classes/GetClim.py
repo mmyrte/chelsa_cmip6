@@ -198,16 +198,6 @@ class CmipClimat:
                              fut_enddate))
 
 
-class ChelsaClimat:
-    """chelsa class"""
-    def __init__(self, xmin, xmax, ymin, ymax):
-        """ Create a set of baseline clims """
-        self.tas = chelsaV2(xmin, xmax, ymin, ymax, 'tas').get_chelsa()
-        self.tasmax = chelsaV2(xmin, xmax, ymin, ymax, 'tasmax').get_chelsa()
-        self.tasmin = chelsaV2(xmin, xmax, ymin, ymax, 'tasmin').get_chelsa()
-        self.pr = chelsaV2(xmin, xmax, ymin, ymax, 'pr').get_chelsa()
-
-
 class DeltaChangeClim:
     """Delta change class"""
     def __init__(self, ChelsaClimat, CmipClimat, refps, refpe, fefps, fefpe, output=False):
