@@ -67,7 +67,7 @@ The delta change method applied is relatively insensitive towards individual mod
 bias of the GCM as it only uses the difference (ratio) for a given variable between
 a reference period and a future period. In case of temperature an additive delta change 
 is applied. In case of precipitation a multiplicative delta change is applied by 
-adding a constant of 0.001 kg*m**-1*day to both the reference and the future data
+adding a constant of 0.0000001 kg m^-2 s^⁻1 to both the reference and the future data
 to avoid division by zero. 
 
 The code only runs for CMIP6 models for which all needed variables tas, tasmax, tasmin, pr,

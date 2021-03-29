@@ -180,7 +180,7 @@ class cmip6_clim:
             if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
                 res = self.historical_period - self.reference_period # additive anomaly
             if self.variable_id == 'pr':
-                res = (self.historical_period + 0.001) / (self.reference_period + 0.001)   # multiplicative anomaly
+                res = (self.historical_period + 0.0000001) / (self.reference_period + 0.0000001)   # multiplicative anomaly
 
         res1 = res.assign_coords({"lon": (((res.lon) % 360) - 180)})
         return res1
