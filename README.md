@@ -35,7 +35,7 @@ along with chelsa_cmip6. If not, see <http://www.gnu.org/licenses/>.
 
 REQUIREMENTS
 ------------
-ISIMIP3BASD is written in Python 3. It has been tested to run well with the
+chelsa_cmip6 is written in Python 3. It has been tested to run well with the
 following Python release and package versions.
 - python 3.6.5 
 - xarray 0.16.2
