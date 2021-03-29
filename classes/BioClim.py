@@ -46,6 +46,7 @@ class quarter_class:
                                  input_core_dims=[['month'], ['month']],
                                  vectorize=True,
                                  dask='parallelized',  # let dask handle the parallelization
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])  # data type of the output(s)
         return res_arr
 
@@ -54,10 +55,10 @@ class BioClim:
     """ climatology class for monthly climatologies """
     def __init__(self, pr, tas, tasmax, tasmin):
         """ Create a set of baseline clims """
-        self.tas = tas #.load() #chunk({month: -1}) #rename({'tas': 'var'})
-        self.tasmax = tasmax #.load() #.chunk({month: -1}) #rename({'tasmax': 'var'})
-        self.tasmin = tasmin #.load() #.chunk({month: -1}) #rename({'tasmin': 'var'})
-        self.pr = pr #.load() #chunk({month: -1}) #rename({'pr': 'var'})
+        self.tas = tas.load() #chunk({month: -1}) #rename({'tas': 'var'})
+        self.tasmax = tasmax.load() #.chunk({month: -1}) #rename({'tasmax': 'var'})
+        self.tasmin = tasmin.load() #.chunk({month: -1}) #rename({'tasmin': 'var'})
+        self.pr = pr.load() #chunk({month: -1}) #rename({'pr': 'var'})
 
     def _mean_(self, x ):
         s = np.sum(x)
@@ -99,6 +100,7 @@ class BioClim:
                                  input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32]) #dask='parallelized',  # let dask handle the parallelization
                                   # data type of the output(s)
         res_arr = res_arr.to_dataset(name='bio1')
@@ -110,6 +112,8 @@ class BioClim:
                                  self.tasmax['tasmax'], self.tasmin['tasmin'],
                                  input_core_dims=[['month'], ['month']],
                                  vectorize=True,
+                                 dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio2')
         return res_arr
@@ -119,6 +123,8 @@ class BioClim:
         res_arr = xr.apply_ufunc(self._diurnalrange_,
                                  self.tasmax['tasmax'], self.tasmin['tasmin'],
                                  input_core_dims=[['month'], ['month']],
+                                 dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  vectorize=True,
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio3')
@@ -131,6 +137,7 @@ class BioClim:
                                  input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio4')
         return res_arr
@@ -142,6 +149,7 @@ class BioClim:
                                  input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio5')
         return res_arr
@@ -153,6 +161,7 @@ class BioClim:
                                  input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio6')
         return res_arr
@@ -164,6 +173,7 @@ class BioClim:
                                  input_core_dims=[['month'], ['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio7')
         return res_arr
@@ -199,6 +209,7 @@ class BioClim:
                                  input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio12')
         return res_arr
@@ -210,6 +221,7 @@ class BioClim:
                                  input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio13')
         return res_arr
@@ -221,6 +233,7 @@ class BioClim:
                                  input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio14')
         return res_arr
@@ -232,6 +245,7 @@ class BioClim:
                                  input_core_dims=[['month']],
                                  vectorize=True,
                                  dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
                                  output_dtypes=[np.float32])
         res_arr = res_arr.to_dataset(name='bio15')
         return res_arr
