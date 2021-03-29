@@ -33,7 +33,7 @@ ap = argparse.ArgumentParser(
     baseline high resolution climatology. Only works for GCMs for
     which tas, tasmax, tasmin, and pr are available.
     ''',
-    epilog='''author: Dirk N. Karger, dirk.karger@wsl.ch, Version 1.1'''
+    epilog='''author: Dirk N. Karger, dirk.karger@wsl.ch'''
 )
 ap.add_argument('-s', '--source_id', type=str,
                 help="Source model (GCM), e.g. MPI-ESM1-2-LR, string")
