@@ -55,6 +55,14 @@ ap.add_argument('-fs', '--fefps', type=str,
                 help="anomaly period start, e.g. 2041-01-01, date format YYYY-MM-DD, string")
 ap.add_argument('-fe', '--fefpe', type=str,
                 help="anomaly period end, e.g. 2070-01-01, date format YYYY-MM-DD, string")
+ap.add_argument('-xn', '--xmin', type=float,
+                help="minimum longitudinal extent of the boundary box, float")
+ap.add_argument('-xm', '--xmax', type=float,
+                help="maximum longitudinal extent of the boundary box, float")
+ap.add_argument('-yn', '--ymin', type=float,
+                help="minimum latitudinal extent of the boundary box, float")
+ap.add_argument('-ym', '--ymax', type=float,
+                help="maximum latitudinal extent of the boundary box, float")
 ap.add_argument('-o', '--output', type=str,
                 help="output directory, needs to exist, string")
 
@@ -73,6 +81,10 @@ refpe = args.refpe
 fefps = args.fefps
 fefpe = args.fefpe
 output = args.output
+xmin = float(args.xmin)
+xmax = float(args.xmax)
+ymin = float(args.ymin)
+ymax = float(args.ymax)
 
 def main():
     print('starting downloading CMIP data:')
@@ -84,7 +96,7 @@ def main():
                            fefpe)
 
     print('starting downloading CHELSA data:')
-    ch_climat = ChelsaClimat(5.3, 10.4, 46, 47.5)
+    ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
 
     dc = DeltaChangeClim(ch_climat, cm_climat, refps,
                          refpe, fefps,
