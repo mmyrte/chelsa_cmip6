@@ -77,6 +77,14 @@ The standard reference period is 1981-01-01 - 2010-12-31. If another reference p
 chosen, the code conducts a delta change for this period as well. Best practice would be to 
 choose the standard reference period.
 
+CITATION:
+------------
+If you need a citation for the output, please refer to the arcticle describing the high
+resolution climatologies:
+
+Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R.W., Zimmermann, N.E., Linder, P., Kessler, M. (2017). Climatologies at high resolution for the Earth land surface areas. Scientific Data. 4 170122. https://doi.org/10.1038/sdata.2017.122
+
+
 EXAMPLE: 
 ------------
 You can use the program by running the following command in the terminal:
