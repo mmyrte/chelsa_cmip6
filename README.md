@@ -89,9 +89,15 @@ chelsa_cmip6.py will only work for GCMs that are both available for the historic
 and the respective scenario of interest. You can check this by using the CMIP6 data search
 interface on e.g. https://esgf-node.llnl.gov/search/cmip6/ 
 There you can filter for the different parameters (e.g. experiment_id) and see if a dataset
-exists. E.g. by using the parameters given in teh example. To check if also the historical
+exists. E.g. by using the parameters given in the example. To check if also the historical
 data exists for the model, just change the activity_id to 'CMIP' and the experiment_id to 'historical'.
+Make sure the four variables needed do exist both for the scenario and the historical period:
 
+These variables are needed:
+- pr
+- tas
+- tasmax
+- tasmin
 
 OUTPUT
 ------------
