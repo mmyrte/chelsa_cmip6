@@ -77,11 +77,27 @@ The standard reference period is 1981-01-01 - 2010-12-31. If another reference p
 chosen, the code conducts a delta change for this period as well. Best practice would be to 
 choose the standard reference period.
 
-EXAMPLE: You can use the program by running the following command in the terminal:
+EXAMPLE: 
+------------
+You can use the program by running the following command in the terminal:
 python3 chelsa_cmip6.py --activity_id 'ScenarioMIP' --table_id 'Amon' --experiment_id 'ssp585' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '2041-01-15' --fefpe '2070-12-15' --output '<your_output_directory>'
 
+CHECKING IF ALL NEEDED INPUT IS AVAILABLE
+------------
+Not all models and activities provied all the neccessary input needed for chelsa_cmip6.py.
+chelsa_cmip6.py will only work for GCMs that are both available for the historical period
+and the respective scenario of interest. You can check this by using the CMIP6 data search
+interface on e.g. https://esgf-node.llnl.gov/search/cmip6/ 
+There you can filter for the different parameters (e.g. experiment_id) and see if a dataset
+exists. E.g. by using the parameters given in teh example. To check if also the historical
+data exists for the model, just change the activity_id to 'CMIP' and the experiment_id to 'historical'.
 
-The output consist of netCDF4 files.
+
+OUTPUT
+------------
+The output consist of netCDF4 files. There will be different files for each variable for
+the reference and the future period. Additionally, there will be netCDF4 files for the 
+different bioclimatic variables each. 
 
 
 CONTACT
