@@ -91,19 +91,28 @@ You can use the program by running the following command in the terminal:
 
 if you are interested in future climate data, you can run the function for example like this:
 
+
 python chelsa_cmip6.py --activity_id 'ScenarioMIP' --table_id 'Amon' --experiment_id 'ssp585' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '2041-01-15' --fefpe '2070-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --xmax 47.5 --output '/home/karger/scratch/'
+
 
 important is that the combination of activity_id 'ScenarioMIP' and e.g. experiment_id 'ssp585' is set to a combination that exists.
 You can also get historical data but in that case, activity_ID, experiment_id, and fefps and fefps need to be changed. E.g. 
 
+
 python chelsa_cmip6.py --activity_id 'CMIP' --table_id 'Amon' --experiment_id 'historical' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '1851-01-15' --fefpe '1880-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --xmax 47.5 --output '/home/karger/scratch/'
+
 
 it is important that your fefps and fefpe are covered by the experiment_id and activity_id.
 
+
 These reference periods are possible for example:
 
+
 'ScenarioMIP' - 2016-01-01 - 2100-12-31
+
+
 'CMIP' - 1850-01-01 - 2015-12-31
+
 
 refps and refpe need to be in the range 1850-01-01 - 2015-12-31.
 
