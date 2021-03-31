@@ -88,7 +88,11 @@ Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R.W., 
 EXAMPLE: 
 ------------
 You can use the program by running the following command in the terminal:
-python3 chelsa_cmip6.py --activity_id 'ScenarioMIP' --table_id 'Amon' --experiment_id 'ssp585' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '2041-01-15' --fefpe '2070-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --xmax 47.5 --output '/home/karger/scratch/'
+python chelsa_cmip6.py --activity_id 'ScenarioMIP' --table_id 'Amon' --experiment_id 'ssp585' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '2041-01-15' --fefpe '2070-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --xmax 47.5 --output '/home/karger/scratch/'
+
+or within python by importing the chelsa_cmip6 function:
+from classes.GetClim import chelsa_cmip6
+
 
 CHECKING IF ALL NEEDED INPUT IS AVAILABLE
 ------------
