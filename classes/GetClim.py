@@ -265,6 +265,39 @@ class DeltaChangeClim:
 
 
 
+def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output):
+    print('starting downloading CMIP data:')
+    cm_climat = CmipClimat(activity_id, table_id,
+                           experiment_id,
+                           institution_id, source_id,
+                           member_id, refps,
+                           refpe, fefps,
+                           fefpe)
+
+    print('starting downloading CHELSA data:')
+    ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
+
+    dc = DeltaChangeClim(ch_climat, cm_climat, refps,
+                         refpe, fefps,
+                         fefpe, output)
+
+    print('starting building climatologies data:')
+    biohist = BioClim(dc.hist_pr, dc.hist_tas, dc.hist_tasmax, dc.hist_tasmin)
+    biofutr = BioClim(dc.futr_pr, dc.futr_tas, dc.futr_tasmax, dc.futr_tasmin)
+
+    print('saving bioclims:')
+    for n in range(1, 20):
+        name = output + 'CHELSA' + '_' + cm_climat.tas.institution_id + '_' \
+               + cm_climat.tas.source_id + '_' + str('bio' + str(n)) + '_' \
+               + cm_climat.tas.experiment_id + '_' + cm_climat.tas.member_id \
+               + '_' + cm_climat.tas.refps + '_' + cm_climat.tas.refpe + '.nc'
+        getattr(biohist, 'bio' + str(n))().to_netcdf(name)
+    for n in range(1, 20):
+        name = output + 'CHELSA' + '_' + cm_climat.tas.institution_id + '_' \
+               + cm_climat.tas.source_id + '_' + str('bio' + str(n)) + '_' \
+               + cm_climat.tas.experiment_id + '_' + cm_climat.tas.member_id \
+               + '_' + cm_climat.tas.fefps + '_' + cm_climat.tas.fefpe + '.nc'
+        getattr(biofutr, 'bio' + str(n))().to_netcdf(name)
 
 
 
