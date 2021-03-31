@@ -143,7 +143,7 @@ OUTPUT
 The output consist of netCDF4 files. There will be different files for each variable seperatly for
 the reference (refps - refpe) and the future period (fefps - fefpe). 
 Additionally, there will be netCDF4 files for the 
-different bioclimatic variables each for both time periods. 
+different bioclimatic variables each for boththe reference (refps - refpe) and the future period (fefps - fefpe). 
 
 
 CONTACT
