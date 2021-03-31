@@ -70,23 +70,7 @@ args = ap.parse_args()
 print("Downscaling:")
 print(args)
 
-source_id = args.source_id
-institution_id = args.institution_id
-table_id = args.table_id
-activity_id = args.activity_id
-experiment_id = args.experiment_id
-member_id = args.member_id
-refps = args.refps
-refpe = args.refpe
-fefps = args.fefps
-fefpe = args.fefpe
-output = args.output
-xmin = float(args.xmin)
-xmax = float(args.xmax)
-ymin = float(args.ymin)
-ymax = float(args.ymax)
-
-def main():
+def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output):
     print('starting downloading CMIP data:')
     cm_climat = CmipClimat(activity_id, table_id,
                            experiment_id,
@@ -122,5 +106,19 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    chelsa_cmip6(source_id=args.source_id,
+                 institution_id=args.institution_id,
+                 table_id=args.table_id,
+                 activity_id=args.activity_id,
+                 experiment_id=args.experiment_id,
+                 member_id=args.member_id,
+                 refps=args.refps,
+                 refpe=args.refpe,
+                 fefps=args.fefps,
+                 fefpe=args.fefpe,
+                 xmin=args.xmin,
+                 xmax=args.xmax,
+                 ymin=args.ymin,
+                 ymax=args.ymax,
+                 output=args.output)
 
