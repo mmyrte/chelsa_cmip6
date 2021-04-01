@@ -53,12 +53,27 @@ def main():
                + cm_climat.tas.experiment_id + '_' + cm_climat.tas.member_id \
                + '_' + cm_climat.tas.refps + '_' + cm_climat.tas.refpe + '.nc'
         getattr(biohist, 'bio' + str(n))().to_netcdf(name)
+
+    for n in ['gdd']:
+        name = '/mnt/storage/karger/' + 'CHELSA' + '_' + cm_climat.tas.institution_id + '_' \
+               + cm_climat.tas.source_id + '_'  + str(n) + '_' \
+               + cm_climat.tas.experiment_id + '_' + cm_climat.tas.member_id \
+               + '_' + cm_climat.tas.refps + '_' + cm_climat.tas.refpe + '.nc'
+        getattr(biohist, str(n))().to_netcdf(name)
+
     for n in range(1, 20):
         name = '/mnt/storage/karger/' + 'CHELSA' + '_' + cm_climat.tas.institution_id + '_' \
                + cm_climat.tas.source_id + '_' + str('bio' + str(n)) + '_' \
                + cm_climat.tas.experiment_id + '_' + cm_climat.tas.member_id \
                + '_' + cm_climat.tas.fefps + '_' + cm_climat.tas.fefpe + '.nc'
         getattr(biofutr, 'bio' + str(n))().to_netcdf(name)
+
+    for n in ['gdd']:
+        name = '/mnt/storage/karger/' + 'CHELSA' + '_' + cm_climat.tas.institution_id + '_' \
+               + cm_climat.tas.source_id + '_' + str(n) + '_' \
+               + cm_climat.tas.experiment_id + '_' + cm_climat.tas.member_id \
+               + '_' + cm_climat.tas.fefps + '_' + cm_climat.tas.fefpe + '.nc'
+        getattr(biofutr, str(n))().to_netcdf(name)
 
 
 if __name__ == '__main__':
