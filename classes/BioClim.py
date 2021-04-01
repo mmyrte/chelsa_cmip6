@@ -18,6 +18,33 @@
 
 import xarray as xr
 import numpy as np
+from scipy.interpolate import interp1d
+
+
+def growing_degree_days(tas, threshold=None):
+    """ calculate growing degree days """
+    if threshold == None:
+        threshold = 273.15 + 5
+
+    if len(tas) == 366 or len(tas) == 365:
+        gdd = np.sum([i for i in tas if i >= threshold])
+
+    if len(tas) == 12:
+        # JAN FEB MAR APR MAY JUN JUL AUG SEP OCT NOV DEC
+        # 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334
+        midmonth = [-15, 15, 45, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349, 380]
+        monthv = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]
+
+        tas14 = []
+        for n in range(0, 14):
+            tas14.append(tas[monthv[n] - 1])
+
+        f2 = interp1d(midmonth, tas14, kind='cubic')
+        xnew = np.linspace(0, 365, num=366, endpoint=True)
+        tas365 = f2(xnew)
+        gdd = np.sum([i for i in tas365 if i >= threshold])
+
+    return gdd
 
 
 class quarter_class:
@@ -288,5 +315,17 @@ class BioClim:
         """Precipitation of Coldest Quarter"""
         res_arr = quarter_class(self.pr['pr'], self.tasmin['tasmin'], "sum", "mean", "min", "max").comp_quarters_array()
         res_arr = res_arr.to_dataset(name='bio19')
+        return res_arr
+
+    def gdd(self):
+        """Growing degree days"""
+        res_arr = xr.apply_ufunc(growing_degree_days,
+                                 self.tas['tas'],
+                                 input_core_dims=[['month']],
+                                 vectorize=True,
+                                 dask='parallelized',
+                                 dask_gufunc_kwargs=['allow_rechunk'],
+                                 output_dtypes=[np.float32])
+        res_arr = res_arr.to_dataset(name='gdd')
         return res_arr
 
