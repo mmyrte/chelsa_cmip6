@@ -25,6 +25,8 @@ import pandas as pd
 import zarr
 import gcsfs
 import datetime
+from classes.BioClim import BioClim
+from classes.BioClim import growing_degree_days
 
 def _esgf_search(server="https://esgf-node.llnl.gov/esg-search/search",
                   files_type="OPENDAP", local_node=True, project="CMIP6",
