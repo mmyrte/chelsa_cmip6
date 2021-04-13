@@ -162,10 +162,10 @@ class BioClim:
         return res_arr
 
     def bio3(self):
-        """ Create mean annual temperature"""
-        res_arr = xr.apply_ufunc(self._diurnalrange_,
-                                 self.tasmax['tasmax'], self.tasmin['tasmin'],
-                                 input_core_dims=[['month'], ['month']],
+        """ Temperature seasonality"""
+        res_arr = xr.apply_ufunc(self._sd_,
+                                 self.tas['tas'],
+                                 input_core_dims=[['month']],
                                  dask='parallelized',
                                  dask_gufunc_kwargs=['allow_rechunk'],
                                  vectorize=True,
@@ -307,13 +307,13 @@ class BioClim:
 
     def bio18(self):
         """Precipitation of Warmest Quarter"""
-        res_arr = quarter_class(self.pr['pr'], self.tasmax['tasmax'], "sum", "mean", "max", "max").comp_quarters_array()
+        res_arr = quarter_class(self.tasmax['tasmax'], self.pr['pr'], "mean", "mean", "max", "max").comp_quarters_array()
         res_arr = res_arr.to_dataset(name='bio18')
         return res_arr
 
     def bio19(self):
         """Precipitation of Coldest Quarter"""
-        res_arr = quarter_class(self.pr['pr'], self.tasmin['tasmin'], "sum", "mean", "min", "max").comp_quarters_array()
+        res_arr = quarter_class(self.tasmin['tasmin'], self.pr['pr'], "mean", "mean", "min", "max").comp_quarters_array()
         res_arr = res_arr.to_dataset(name='bio19')
         return res_arr
 
