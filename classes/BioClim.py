@@ -24,7 +24,7 @@ from scipy.interpolate import interp1d
 def growing_degree_days(tas, threshold=None):
     """ calculate growing degree days """
     if threshold == None:
-        threshold = 273.15 + 5
+        threshold = 5
 
     if len(tas) == 366 or len(tas) == 365:
         gdd = np.sum([i for i in tas if i >= threshold])
