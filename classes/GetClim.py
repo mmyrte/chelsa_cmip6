@@ -139,7 +139,7 @@ class chelsaV2:
         if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
             res = ds / 10 - 273.15
         if self.variable_id == 'pr':
-            res = ds / 100
+            res = ds / 10
         return res
 
 
@@ -176,13 +176,13 @@ class cmip6_clim:
             if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
                 res = self.future_period - self.reference_period # additive anomaly
             if self.variable_id == 'pr':
-                res = (self.future_period + 0.001) / (self.reference_period + 0.001)   # multiplicative anomaly
+                res = (self.future_period * 86400 + 0.01) / (self.reference_period * 86400 + 0.01)   # multiplicative anomaly
 
         if period == 'hist':
             if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
                 res = self.historical_period - self.reference_period # additive anomaly
             if self.variable_id == 'pr':
-                res = (self.historical_period + 0.0000001) / (self.reference_period + 0.0000001)   # multiplicative anomaly
+                res = (self.historical_period * 86400 + 0.01) / (self.reference_period * 86400 + 0.01)   # multiplicative anomaly
 
         res1 = res.assign_coords({"lon": (((res.lon) % 360) - 180)})
         return res1
@@ -228,10 +228,10 @@ class DeltaChangeClim:
         self.futr_year = np.mean([int(datetime.datetime.strptime(fefps, '%Y-%m-%d').year), int(datetime.datetime.strptime(fefpe, '%Y-%m-%d').year)]).__round__()
 
         for per in ['futr', 'hist']:
-            setattr(self, str(per + '_pr'),getattr(ChelsaClimat, 'pr').to_dataset(name='pr').rename({'time': 'month'}).drop('band') / interpol(
-                    getattr(CmipClimat, 'pr').get_anomaly('hist'), getattr(ChelsaClimat, 'pr')).interpolate())
+            setattr(self, str(per + '_pr'), getattr(ChelsaClimat, 'pr').to_dataset(name='pr').rename({'time': 'month'}).drop('band') * interpol(
+                    getattr(CmipClimat, 'pr').get_anomaly(per), getattr(ChelsaClimat, 'pr')).interpolate())
             for var in ['tas', 'tasmax', 'tasmin']:
-                setattr(self, str(per + '_' + var), getattr(ChelsaClimat, var).to_dataset(name=var).rename({'time': 'month'}).drop('band') - interpol(
+                setattr(self, str(per + '_' + var), getattr(ChelsaClimat, var).to_dataset(name=var).rename({'time': 'month'}).drop('band') + interpol(
                         getattr(CmipClimat, var).get_anomaly(per), getattr(ChelsaClimat, var)).interpolate())
 
         for var in ['tas', 'tasmax', 'tasmin', 'pr']:
