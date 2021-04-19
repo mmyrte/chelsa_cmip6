@@ -61,13 +61,13 @@ class quarter_class:
         #xv = [11, 20, 30, 104, 95, 96, 75, 85, 90, 190, 181, 172]
         monthv = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]
         b1 = []
-        for n in range(0, 15):
+        for n in range(0, 14):
             b1.append(xv[monthv[n]-1])
         a1 = []
         for m in range(1, 13):
             global x0
             if agg == 'sum':
-                x0 = np.sum([b1[m-1], b1[m], b1[m+1]])
+                x0 = np.sum([b1[m - 1], b1[m], b1[m + 1]])
             if agg == 'mean':
                 x0 = np.mean([b1[m - 1], b1[m], b1[m + 1]])
             if agg == 'max':
