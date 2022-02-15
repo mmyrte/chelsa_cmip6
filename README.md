@@ -56,15 +56,15 @@ simulation data from CMIP6 using climate observation data from CHELSA V.2.1
 at a 0.0083333° grid resolution for a given area of choice.
 
 The GetClim module contains classes and functions to connect to CMIP6 data
-via the Google cloud storage and read the data into xarrays. It also creates
-monthly climatologies using the delta change anomaly correction method for a given 
+via the Google cloud storage and to read the data into xarrays. It also creates
+monthly climatologies using the delta change anomally correction method for a given 
 time period. 
 
 The BioClim module contains classes calculating various bioclimatic parameters
 from climatological data (see: https://chelsa-climate.org/bioclim).
 
-The delta change method applied is relatively insensitive towards individual model 
-bias of the GCM as it only uses the difference (ratio) for a given variable between
+The delta change method that is applied is relatively insensitive towards individual model 
+bias of a GCM, as it only uses the difference (ratio) for a given variable between
 a reference period and a future period. In case of temperature an additive delta change 
 is applied. In case of precipitation a multiplicative delta change is applied by 
 adding a constant of 0.0000001 kg m^-2 s^⁻1 to both the reference and the future data
@@ -79,7 +79,7 @@ choose the standard reference period.
 
 CITATION:
 ------------
-If you need a citation for the output, please refer to the arcticle describing the high
+If you need a citation for the output, please refer to the article describing the high
 resolution climatologies:
 
 Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R.W., Zimmermann, N.E., Linder, P., Kessler, M. (2017). Climatologies at high resolution for the Earth land surface areas. Scientific Data. 4 170122. https://doi.org/10.1038/sdata.2017.122
@@ -140,10 +140,10 @@ These variables are needed:
 
 OUTPUT
 ------------
-The output consist of netCDF4 files. There will be different files for each variable seperatly for
+The output consist of netCDF4 files. There will be different files for each variable and seperatly for
 the reference (refps - refpe) and the future period (fefps - fefpe). 
 Additionally, there will be netCDF4 files for the 
-different bioclimatic variables each for boththe reference (refps - refpe) and the future period (fefps - fefpe). 
+different bioclimatic variables each for both the reference (refps - refpe) and the future period (fefps - fefpe). 
 
 
 CONTACT
