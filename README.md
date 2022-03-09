@@ -46,6 +46,7 @@ following Python release and package versions.
 - zarr 2.6.1
 - gcsfs 0.7.2
 - datetime 3.9.2
+- scipy 0.19.1
 
 
 
