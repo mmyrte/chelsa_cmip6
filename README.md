@@ -122,6 +122,18 @@ or within python by importing the chelsa_cmip6 function:
 from classes.GetClim import chelsa_cmip6
 
 
+SINGULARITY
+------------
+All dependencies are also resolved in the singularity container '/singularity/chelsa_cmip6.sif'. Singularity needs to be installed on the respective linux system you are using. 
+An installation guide can be found here: https://sylabs.io/guides/3.3/user-guide/quick_start.html#quick-installation-steps
+
+If you use chelsa_cmip6 together with singularity the command should be slightly modified:
+singularity exec /singularity/chelsa_cmip6.sif python3 chelsa_cmip6.py --activity_id 'CMIP' --table_id 'Amon' --experiment_id 'historical' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '1851-01-15' --fefpe '1880-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '/home/karger/scratch/'
+
+tested with singularity version 3.3.0-809.g78ec427cc
+but newer versions usually work as well.
+
+
 CHECKING IF ALL NEEDED INPUT IS AVAILABLE
 ------------
 Not all models and activities provied all the neccessary input needed for chelsa_cmip6.py.
