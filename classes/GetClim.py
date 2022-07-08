@@ -184,7 +184,7 @@ class cmip6_clim:
             if self.variable_id == 'pr':
                 res = (self.historical_period * 86400 + 0.01) / (self.reference_period * 86400 + 0.01)   # multiplicative anomaly
 
-        res1 = res.assign_coords({"lon": (((res.lon) % 360) - 180)})
+        res1 = res.assign_coords(lon=(((res.lon + 180) % 360) - 180)).sortby('lon') #res1 = res.assign_coords({"lon": (((res.lon) % 360) - 180)}) #bugfix
         return res1
 
 
