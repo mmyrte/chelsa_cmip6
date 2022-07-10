@@ -79,7 +79,19 @@ def _esgf_search(server="https://esgf-node.llnl.gov/esg-search/search",
 
 
 def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, source_id, member_id):
-    """Get CMIP model from Google"""
+    """
+    Get CMIP model from Google Cloud storage via lazy loading.
+
+    :param activity_id: the activity_id according to CMIP6
+    :param table_id: the table id according to CMIP6
+    :param experiment_id: the experiment_id according to CMIP6
+    :param instituion_id: the instituion_id according to CMIP6
+    :param source_id: the source_id according to CMIP6
+    :param member_id: the member_id according to CMIP6
+
+    :return: xarray dataset
+    :rtype: xarray
+    """
     gcs = gcsfs.GCSFileSystem(token='anon')
     df = pd.read_csv('https://storage.googleapis.com/cmip6/cmip6-zarr-consolidated-stores.csv')
     search_string = "activity_id == '" 
@@ -112,9 +124,15 @@ def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, 
 
 
 class interpol:
-    """Interpolation class"""
+    """
+    Spatial interpolation class for xarray datasets
+    
+    :param ds: an xarray dataset
+    :param template: a xarray dataset with the target resolution
+    :return: a spatially, to the resoluton of the template, interpolated xarray
+    :rtype: xarray
+    """
     def __init__(self, ds, template):
-        """ Create a set of baseline clims """
         self.ds = ds
         self.template = template
 
