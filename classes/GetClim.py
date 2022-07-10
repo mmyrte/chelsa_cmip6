@@ -82,7 +82,20 @@ def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, 
     """Get CMIP model from Google"""
     gcs = gcsfs.GCSFileSystem(token='anon')
     df = pd.read_csv('https://storage.googleapis.com/cmip6/cmip6-zarr-consolidated-stores.csv')
-    search_string = "activity_id == '" + activity_id + "' & table_id == '" + table_id + "' & variable_id == '" + variable_id + "' & experiment_id == '" + experiment_id + "' & institution_id == '" + instituion_id + "' & source_id == '" + source_id + "' & member_id == '" + member_id + "'"
+    search_string = "activity_id == '" 
+                    + activity_id 
+                    + "' & table_id == '" 
+                    + table_id 
+                    + "' & variable_id == '" 
+                    + variable_id 
+                    + "' & experiment_id == '" 
+                    + experiment_id 
+                    + "' & institution_id == '" 
+                    + instituion_id 
+                    + "' & source_id == '" 
+                    + source_id 
+                    + "' & member_id == '" 
+                    + member_id + "'"
     df_ta = df.query(search_string)
     # get the path to a specific zarr store (the first one from the dataframe above)
     zstore = df_ta.zstore.values[-1]
@@ -111,9 +124,18 @@ class interpol:
 
 
 class chelsaV2:
-    """ get and clip CHELSA climatologies """
+    """ 
+    Class to download and clip data from the CHELSA V2.1 normals (climatologies)
+    for a specific bounding box delimited by minimum and maximum latitude and longitude
+    
+    :param xmin: Minimum longitude [Decimal degree]
+    :param xmax: Maximum longitude [Decimal degree]
+    :param ymin: Minimum latitude [Decimal degree]
+    :param ymax: Maximum latitude [Decimal degree]
+    :param variable_id: id of the variable that needs to be downloaded (e.g. 'tas')
+
+    """
     def __init__(self, xmin, xmax, ymin, ymax, variable_id):
-        """ Create a set of baseline clims """
         self.xmin = xmin
         self.xmax = xmax
         self.ymin = ymin
@@ -121,17 +143,29 @@ class chelsaV2:
         self.variable_id = variable_id
 
     def _crop_ds_(self, ds):
-        """clip xarray"""
+        """
+        clip xarray
+        
+        :param ds: a xarray to_dataset
+        :return: clipped xarray
+        :rtype: xarray
+        """
         mask_lon = (ds.x >= self.xmin) & (ds.x <= self.xmax)
         mask_lat = (ds.y >= self.ymin) & (ds.y <= self.ymax)
         cropped_ds = ds.where(mask_lon & mask_lat, drop=True)
         return cropped_ds
 
     def get_chelsa(self):
-        """download chelsa"""
+        """
+        download chelsa
+        
+        :return: cropped xarray
+        :rtype: xarray
+        """
         a = []
         for month in range(1, 13):
-            url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/' + self.variable_id + '/CHELSA_' + self.variable_id + '_' + '%02d' % (
+            url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/' 
+            + self.variable_id + '/CHELSA_' + self.variable_id + '_' + '%02d' % (
                 month,) + '_1981-2010_V.2.1.tif'
             a.append(url)
 
@@ -163,11 +197,29 @@ class cmip6_clim:
         self.refpe = ref_enddate
         self.fefps = fut_startdate
         self.fefpe = fut_enddate
-        self.future_period = _get_cmip(self.activity_id, self.table_id, self.variable_id, self.experiment_id, self.institution_id, self.source_id, self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
+        self.future_period = _get_cmip(self.activity_id, 
+                                       self.table_id, 
+                                       self.variable_id, 
+                                       self.experiment_id, 
+                                       self.institution_id, 
+                                       self.source_id, 
+                                       self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         print("future data loaded... ")
-        self.historical_period = _get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.source_id, self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
+        self.historical_period = _get_cmip('CMIP', 
+                                           self.table_id, 
+                                           self.variable_id, 
+                                           'historical', 
+                                           self.institution_id, 
+                                           self.source_id, 
+                                           self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         print("historical period set... ")
-        self.reference_period = _get_cmip('CMIP', self.table_id, self.variable_id, 'historical', self.institution_id, self.source_id, self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
+        self.reference_period = _get_cmip('CMIP', 
+                                          self.table_id, 
+                                          self.variable_id, 
+                                          'historical', 
+                                          self.institution_id, 
+                                          self.source_id, 
+                                          self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
         print("reference period set... done")
 
     def get_anomaly(self, period):
@@ -224,8 +276,10 @@ class DeltaChangeClim:
         self.refpe = refpe
         self.fefps = fefps
         self.fefpe = fefpe
-        self.hist_year = np.mean([int(datetime.datetime.strptime(refps, '%Y-%m-%d').year), int(datetime.datetime.strptime(refpe, '%Y-%m-%d').year)]).__round__()
-        self.futr_year = np.mean([int(datetime.datetime.strptime(fefps, '%Y-%m-%d').year), int(datetime.datetime.strptime(fefpe, '%Y-%m-%d').year)]).__round__()
+        self.hist_year = np.mean([int(datetime.datetime.strptime(refps, '%Y-%m-%d').year), 
+                                 int(datetime.datetime.strptime(refpe, '%Y-%m-%d').year)]).__round__()
+        self.futr_year = np.mean([int(datetime.datetime.strptime(fefps, '%Y-%m-%d').year), 
+                                 int(datetime.datetime.strptime(fefpe, '%Y-%m-%d').year)]).__round__()
 
         for per in ['futr', 'hist']:
             setattr(self, str(per + '_pr'), getattr(ChelsaClimat, 'pr').to_dataset(name='pr').rename({'time': 'month'}).drop('band') * interpol(
@@ -267,7 +321,8 @@ class DeltaChangeClim:
 
 
 
-def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output):
+def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, 
+                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output):
     print('starting downloading CMIP data:')
     cm_climat = CmipClimat(activity_id, table_id,
                            experiment_id,
