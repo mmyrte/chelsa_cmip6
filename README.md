@@ -136,7 +136,7 @@ but newer versions usually work as well.
 
 CHECKING IF ALL NEEDED INPUT IS AVAILABLE
 ------------
-Not all models and activities provied all the neccessary input needed for chelsa_cmip6.py.
+Not all models and activities provide all the necessary input needed for chelsa_cmip6.py.
 chelsa_cmip6.py will only work for GCMs that are both available for the historical period
 and the respective scenario of interest. You can check this by using the CMIP6 data search
 interface on e.g. https://esgf-node.llnl.gov/search/cmip6/ 
