@@ -272,6 +272,7 @@ class BioClim:
     def bio1(self):
         """
         Create mean annual temperature
+
         :return: mean annual 2m air temperature [Celsius]
         :rtype: xarray
         """
@@ -289,6 +290,7 @@ class BioClim:
     def bio2(self):
         """
         Create mean diurnal temperature range
+
         :return: mean diurnal temperature range [Kelvin]
         :rtype: xarray
         """
@@ -305,6 +307,7 @@ class BioClim:
     def bio3(self):
         """ 
         Isothermality
+
         :return: Isothermality [unitless]
         :rtype: xarray
         """
@@ -319,7 +322,12 @@ class BioClim:
         return res_arr
 
     def bio4(self):
-        """Temperature Seasonality (Standard Deviation) """
+        """
+        Temperature Seasonality (Standard Deviation)
+
+        :return: Temperature Seasonality
+        :rtype: xarray
+        """
         res_arr = xr.apply_ufunc(self._sd_,
                                  self.tas['tas'],
                                  input_core_dims=[['month']],
@@ -331,7 +339,12 @@ class BioClim:
         return res_arr
 
     def bio5(self):
-        """Max Temperature of Warmest Month"""
+        """
+        Max Temperature of Warmest Month
+
+        :return: Maximum temperature of the warmest month [Celsius]
+        :rtype: xarray
+        """
         res_arr = xr.apply_ufunc(self._max_,
                                  self.tasmax['tasmax'],
                                  input_core_dims=[['month']],
@@ -343,7 +356,12 @@ class BioClim:
         return res_arr
 
     def bio6(self):
-        """Min Temperature of Coldest Month"""
+        """
+        Minimum Temperature of Coldest Month
+
+        :return: Minimum temperature of the coldest month [Celsius]
+        :rtype: xarray
+        """
         res_arr = xr.apply_ufunc(self._min_,
                                  self.tasmin['tasmin'],
                                  input_core_dims=[['month']],
@@ -355,7 +373,12 @@ class BioClim:
         return res_arr
 
     def bio7(self):
-        """Annual Temperature Range"""
+        """
+        Annual Temperature Range
+        
+        :return: Annual range in temperature [Celsius]
+        :rtype: xarray
+        """
         res_arr = xr.apply_ufunc(self._bio7_,
                                  self.tasmax['tasmax'], self.tasmin['tasmin'],
                                  input_core_dims=[['month'], ['month']],
@@ -367,7 +390,12 @@ class BioClim:
         return res_arr
 
     def bio8(self):
-        """Mean Temperature of Wettest Quarter"""
+        """
+        Mean Temperature of Wettest Quarter
+        
+        :return: Mean temperature of the wettest quarter [Celsius]
+        :rtype: xarray
+        """
         res_arr = quarter_class(target_variable=self.tas['tas'],
                                 quarter_variable=self.pr['pr'],
                                 agg_target="mean",
@@ -377,7 +405,12 @@ class BioClim:
         return res_arr
 
     def bio9(self):
-        """Mean Temperature of the driest Quarter"""
+        """
+        Mean Temperature of the driest Quarter
+        
+        :return: Mean temperature of the driest quarter [Celsius]
+        :rtype: xarray
+        """
         res_arr = quarter_class(target_variable=self.tas['tas'],
                                 quarter_variable=self.pr['pr'],
                                 agg_target="mean",
@@ -387,7 +420,12 @@ class BioClim:
         return res_arr
 
     def bio10(self):
-        """Mean Temperature of the warmest Quarter"""
+        """
+        Mean Temperature of the warmest Quarter
+        
+        :return: Mean temperature of the warmest quarter [Celsius]
+        :rtype: xarray
+        """
         res_arr = quarter_class(target_variable=self.tas['tas'],
                                 quarter_variable=self.tas['tas'],
                                 agg_target="mean",
@@ -397,7 +435,12 @@ class BioClim:
         return res_arr
 
     def bio11(self):
-        """Mean Temperature of coldest Quarter"""
+        """
+        Mean Temperature of coldest Quarter
+        
+        :return: Mean temperature of the coldest quarter [Celsius]
+        :rtype: xarray
+        """
         res_arr = quarter_class(target_variable=self.tas['tas'],
                                 quarter_variable=self.tas['tas'],
                                 agg_target="mean",
@@ -407,7 +450,12 @@ class BioClim:
         return res_arr
 
     def bio12(self):
-        """Annual Precipitation Sum"""
+        """
+        Annual Precipitation Sum
+        
+        :return: Annual precipition sum [kg*m**-2*year*-1]
+        :rtype: xarray
+        """
         res_arr = xr.apply_ufunc(self._sum_,
                                  self.pr['pr'],
                                  input_core_dims=[['month']],
@@ -431,7 +479,12 @@ class BioClim:
         return res_arr
 
     def bio14(self):
-        """Precipitation of driest month"""
+        """
+        Precipitation of driest month
+                
+        :return: precipition rate [kg*m**-2*month*-1]
+        :rtype: xarray
+        """
         res_arr = xr.apply_ufunc(self._min_,
                                  self.pr['pr'],
                                  input_core_dims=[['month']],
@@ -443,7 +496,12 @@ class BioClim:
         return res_arr
 
     def bio15(self):
-        """Precipitation Seasonality"""
+        """
+        Precipitation Seasonality  
+
+        :return: coefficient of variation in precipition rate [kg*m**-2*month*-1]
+        :rtype: xarray
+        """
         res_arr = xr.apply_ufunc(self._cv_,
                                  self.pr['pr'],
                                  input_core_dims=[['month']],
@@ -455,7 +513,12 @@ class BioClim:
         return res_arr
 
     def bio16(self):
-        """Precipitation of Wettest Quarter"""
+        """
+        Precipitation of Wettest Quarter    
+
+        :return: precipition rate [kg*m**-2*month*-1]
+        :rtype: xarray
+        """
         res_arr = quarter_class(target_variable=self.pr['pr'],
                                 quarter_variable=self.pr['pr'],
                                 agg_target="sum",
@@ -465,7 +528,12 @@ class BioClim:
         return res_arr
 
     def bio17(self):
-        """Precipitation of Driest Quarter"""
+        """
+        Precipitation of Driest Quarter                
+        
+        :return: precipition rate [kg*m**-2*month*-1]
+        :rtype: xarray
+        """
         res_arr = quarter_class(target_variable=self.pr['pr'],
                                 quarter_variable=self.pr['pr'],
                                 agg_target="sum",
@@ -475,7 +543,12 @@ class BioClim:
         return res_arr
 
     def bio18(self):
-        """Precipitation of Warmest Quarter"""
+        """
+        Precipitation of Warmest Quarter 
+
+        :return: precipition rate [kg*m**-2*month*-1]
+        :rtype: xarray
+        """
         res_arr = quarter_class(target_variable=self.pr['pr'],
                                 quarter_variable=self.tasmax['tasmax'],
                                 agg_target="sum",
@@ -485,7 +558,12 @@ class BioClim:
         return res_arr
 
     def bio19(self):
-        """Precipitation of Coldest Quarter"""
+        """
+        Precipitation of Coldest Quarter                
+        
+        :return: precipition rate [kg*m**-2*month*-1]
+        :rtype: xarray
+        """
         res_arr = quarter_class(target_variable=self.pr['pr'],
                                 quarter_variable=self.tas['tas'],
                                 agg_target="sum",
@@ -495,7 +573,12 @@ class BioClim:
         return res_arr
 
     def gdd(self):
-        """Growing degree days"""
+        """
+        Growing degree days
+                    
+        :return: groeing degree days [Kelvin]
+        :rtype: xarray
+        """
         res_arr = xr.apply_ufunc(growing_degree_days,
                                  self.tas['tas'],
                                  input_core_dims=[['month']],
