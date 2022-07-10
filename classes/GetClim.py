@@ -196,14 +196,26 @@ class chelsaV2:
 
 
 class cmip6_clim:
-    """ climatology class for monthly climatologies """
+    """ 
+    Climatology class for monthly climatologies for CMIP6 data 
+    
+    :param activity_id: the activity_id according to CMIP6
+    :param table_id: the table id according to CMIP6
+    :param experiment_id: the experiment_id according to CMIP6
+    :param instituion_id: the instituion_id according to CMIP6
+    :param source_id: the source_id according to CMIP6
+    :param member_id: the member_id according to CMIP6
+    :param ref_startdate: Starting date of the reference_period
+    :param ref_enddate: End date of the reference_period
+    :param fut_startdate: Start date of the future future_period
+    :param fut_enddate: End date of the future_period
+    """
     def __init__(self, activity_id, table_id,
                  variable_id, experiment_id,
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
                  fut_enddate):
-        """ Create a set of baseline clims """
         self.activity_id = activity_id
         self.table_id = table_id
         self.variable_id = variable_id
@@ -241,7 +253,13 @@ class cmip6_clim:
         print("reference period set... done")
 
     def get_anomaly(self, period):
-        """Get climatological anomaly"""
+        """
+        Get climatological anomaly between the reference and future future_period
+
+        :param period:  either future (futr) or historical (hist)
+        :return: anomaly
+        :rtype: xarray
+        """
         if period == 'futr':
             if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
                 res = self.future_period - self.reference_period # additive anomaly
@@ -259,23 +277,40 @@ class cmip6_clim:
 
 
 class ChelsaClimat:
-    """chelsa class"""
+    """
+    Chelsa data class containing the clipped CHELSA V2.1 climatological normals
+    
+    :param xmin: Minimum longitude [Decimal degree]
+    :param xmax: Maximum longitude [Decimal degree]
+    :param ymin: Minimum latitude [Decimal degree]
+    :param ymax: Maximum latitude [Decimal degree]
+    """
     def __init__(self, xmin, xmax, ymin, ymax):
-        """ Create a set of baseline clims """
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
             setattr(self, var, chelsaV2(xmin, xmax, ymin, ymax, var).get_chelsa())
 
 
 class CmipClimat:
-    """ climatology class for monthly cmip 6 climatologies """
-
+    """ 
+    Climatology data class for monthly cmip 6 climatological normals
+    
+    :param activity_id: the activity_id according to CMIP6
+    :param table_id: the table id according to CMIP6
+    :param experiment_id: the experiment_id according to CMIP6
+    :param instituion_id: the instituion_id according to CMIP6
+    :param source_id: the source_id according to CMIP6
+    :param member_id: the member_id according to CMIP6
+    :param ref_startdate: Starting date of the reference_period
+    :param ref_enddate: End date of the reference_period
+    :param fut_startdate: Start date of the future future_period
+    :param fut_enddate: End date of the future_period
+    """
     def __init__(self, activity_id, table_id,
                  experiment_id,
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
                  fut_enddate):
-        """ Create a set of baseline clims """
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
             setattr(self, var, cmip6_clim(activity_id, table_id,
                              var, experiment_id,
@@ -286,9 +321,18 @@ class CmipClimat:
 
 
 class DeltaChangeClim:
-    """Delta change class"""
+    """
+    Delta change method class
+    
+    :param ChelsaClimat: A Chelsa data class containing the clipped CHELSA V2.1 climatological normals 
+    :param CmipClimat: A Climatology data class for monthly cmip 6 climatological normals
+    :param refps: Starting date of the reference_period
+    :param refpe: End date of the reference_period
+    :param refps: Start date of the future future_period
+    :param fefpe: End date of the future_period
+    :param output: bolean: should the output be saved as a file, defaults to False
+    """
     def __init__(self, ChelsaClimat, CmipClimat, refps, refpe, fefps, fefpe, output=False):
-        """ Create a set of baseline clims """
         self.output = output
         self.refps = refps
         self.refpe = refpe
@@ -341,6 +385,25 @@ class DeltaChangeClim:
 
 def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, 
                  refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output):
+    """ 
+    Calculate chelsa cmip 6 climatological normals and bioclimatic variables
+    
+    :param activity_id: the activity_id according to CMIP6
+    :param table_id: the table id according to CMIP6
+    :param experiment_id: the experiment_id according to CMIP6
+    :param instituion_id: the instituion_id according to CMIP6
+    :param source_id: the source_id according to CMIP6
+    :param member_id: the member_id according to CMIP6
+    :param refps: Starting date of the reference_period
+    :param refpe: End date of the reference_period
+    :param fefps: Start date of the future future_period
+    :param fefpe: End date of the future_period
+    :param xmin: Minimum longitude [Decimal degree]
+    :param xmax: Maximum longitude [Decimal degree]
+    :param ymin: Minimum latitude [Decimal degree]
+    :param ymax: Maximum latitude [Decimal degree]
+    :param output: output directory, string
+    """
     print('starting downloading CMIP data:')
     cm_climat = CmipClimat(activity_id, table_id,
                            experiment_id,
