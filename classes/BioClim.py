@@ -22,7 +22,16 @@ from scipy.interpolate import interp1d
 
 
 def growing_degree_days(tas, threshold=None):
-    """ calculate growing degree days """
+    """ 
+    Calculate growing degree days
+    
+    :param tas: Daily mean 2m air temperature [Celsius]
+    :param threshold: The threshold temperature above which a day is counted as growing day [Celsius]
+
+    :return: growing degree days [Celsius]
+    :rtype: float
+    """
+
     if threshold == None:
         threshold = 5
 
@@ -48,7 +57,18 @@ def growing_degree_days(tas, threshold=None):
 
 
 class quarter_class:
-    """ quarters class for monthly climatologies """
+    """ 
+    quarters class for monthly climatologies 
+    
+    Creates quarters from monthly climatologies.
+
+    param: target_variable: the variable that is to be aggregated for a quarter_class
+    param: quarter_variable: the variable that forms the basis for the quarters (e.g. precipitation for 'wettest' quarter)
+    param: agg_target: the way how the target_variable is aggregated (e.g. mean)
+    param: agg_quarter: the way how the quarter_variable is aggregated (e.g. max)
+    param: find_fun: determines what needs to be found (e.g. minimum temperature of coldes quarter = 'min')
+
+    """
     def __init__(self, target_variable, quarter_variable, agg_target, agg_quarter, find_fun):
         self.target_variable = target_variable
         self.quarter_variable = quarter_variable
@@ -58,6 +78,15 @@ class quarter_class:
 
     #[dec, jan, feb, mar, apr, may, jun, jul, sep, oct, nov, dec, jan]
     def _create_quarter_(self, xv, agg):
+        """
+        creates quarters from a vector of 12 monthly means
+
+        param: xv: monthly values of a variable
+        param: agg: aggregation method
+
+        return: array of size 4 containing the quarters
+        rtype: array
+        """
         #xv = [11, 20, 30, 104, 95, 96, 75, 85, 90, 190, 181, 172]
         monthv = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]
         b1 = []
