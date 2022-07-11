@@ -169,9 +169,7 @@ class chelsaV2:
         """
         a = []
         for month in range(1, 13):
-            url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/' 
-            + self.variable_id + '/CHELSA_' + self.variable_id + '_' + '%02d' % (
-                month,) + '_1981-2010_V.2.1.tif'
+            url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/' + self.variable_id + '/CHELSA_' + self.variable_id + '_' + '%02d' % (month,) + '_1981-2010_V.2.1.tif'
             a.append(url)
 
         ds = self._crop_ds_(xr.concat([xr.open_rasterio(i) for i in a], 'time'))
