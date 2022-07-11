@@ -94,20 +94,7 @@ def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, 
     """
     gcs = gcsfs.GCSFileSystem(token='anon')
     df = pd.read_csv('https://storage.googleapis.com/cmip6/cmip6-zarr-consolidated-stores.csv')
-    search_string = "activity_id == '" 
-                    + activity_id 
-                    + "' & table_id == '" 
-                    + table_id 
-                    + "' & variable_id == '" 
-                    + variable_id 
-                    + "' & experiment_id == '" 
-                    + experiment_id 
-                    + "' & institution_id == '" 
-                    + instituion_id 
-                    + "' & source_id == '" 
-                    + source_id 
-                    + "' & member_id == '" 
-                    + member_id + "'"
+    search_string = "activity_id == '" + activity_id + "' & table_id == '" + table_id + "' & variable_id == '" + variable_id + "' & experiment_id == '" + experiment_id + "' & institution_id == '" + instituion_id + "' & source_id == '" + source_id + "' & member_id == '" + member_id + "'"
     df_ta = df.query(search_string)
     # get the path to a specific zarr store (the first one from the dataframe above)
     zstore = df_ta.zstore.values[-1]
