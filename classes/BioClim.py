@@ -312,8 +312,9 @@ class BioClim:
         :rtype: xarray
         """
         res_arr = xr.apply_ufunc(self._bio3_,
-                                 self.tas['tas'],
-                                 input_core_dims=[['month']],
+                                 self.tasmax['tasmax'],
+                                 self.tasmin['tasmin'],
+                                 input_core_dims=[['month'],['month']],
                                  dask='parallelized',
                                  dask_gufunc_kwargs=['allow_rechunk'],
                                  vectorize=True,
