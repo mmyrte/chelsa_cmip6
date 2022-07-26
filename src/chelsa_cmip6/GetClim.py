@@ -16,63 +16,12 @@
 #along with chelsa_cmip6.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import requests
 import numpy as np
 import xarray as xr
 import pandas as pd
 import gcsfs
 import datetime
 from src.chelsa_cmip6.BioClim import BioClim
-
-
-def _esgf_search(server="https://esgf-node.llnl.gov/esg-search/search",
-                  files_type="OPENDAP", local_node=True, project="CMIP6",
-                  verbose=False, format="application%2Fsolr%2Bjson",
-                  use_csrf=False, **search):
-    client = requests.session()
-    payload = search
-    payload["project"] = project
-    payload["type"] = "File"
-    if local_node:
-        payload["distrib"] = "false"
-    if use_csrf:
-        client.get(server)
-        if 'csrftoken' in client.cookies:
-            # Django 1.6 and up
-            csrftoken = client.cookies['csrftoken']
-        else:
-            # older versions
-            csrftoken = client.cookies['csrf']
-        payload["csrfmiddlewaretoken"] = csrftoken
-    payload["format"] = format
-    offset = 0
-    numFound = 10000
-    all_files = []
-    files_type = files_type.upper()
-    while offset < numFound:
-        payload["offset"] = offset
-        url_keys = []
-        for k in payload:
-            url_keys += ["{}={}".format(k, payload[k])]
-
-        url = "{}/?{}".format(server, "&".join(url_keys))
-        print(url)
-        r = client.get(url)
-        r.raise_for_status()
-        resp = r.json()["response"]
-        numFound = int(resp["numFound"])
-        resp = resp["docs"]
-        offset += len(resp)
-        for d in resp:
-            if verbose:
-                for k in d:
-                    print("{}: {}".format(k, d[k]))
-            url = d["url"]
-            for f in d["url"]:
-                sp = f.split("|")
-                if sp[-1] == files_type:
-                    all_files.append(sp[0].split(".html")[0])
-    return sorted(all_files)
 
 
 def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, source_id, member_id):
@@ -216,7 +165,7 @@ class cmip6_clim:
                                        self.institution_id, 
                                        self.source_id, 
                                        self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
-        print("future data loaded... ")
+        #print("future data loaded... ")
         self.historical_period = _get_cmip('CMIP', 
                                            self.table_id, 
                                            self.variable_id, 
@@ -224,7 +173,7 @@ class cmip6_clim:
                                            self.institution_id, 
                                            self.source_id, 
                                            self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
-        print("historical period set... ")
+        #print("historical period set... ")
         self.reference_period = _get_cmip('CMIP', 
                                           self.table_id, 
                                           self.variable_id, 
@@ -232,7 +181,7 @@ class cmip6_clim:
                                           self.institution_id, 
                                           self.source_id, 
                                           self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
-        print("reference period set... done")
+        #print("reference period set... done")
 
     def get_anomaly(self, period):
         """
@@ -364,7 +313,6 @@ class DeltaChangeClim:
                                              + '.nc')
 
 
-
 def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, 
                  refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output):
     """ 
@@ -386,7 +334,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     :param ymax: Maximum latitude [Decimal degree]
     :param output: output directory, string
     """
-    print('starting downloading CMIP data:')
+    #print('starting downloading CMIP data:')
     cm_climat = CmipClimat(activity_id, table_id,
                            experiment_id,
                            institution_id, source_id,
@@ -394,18 +342,18 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                            refpe, fefps,
                            fefpe)
 
-    print('starting downloading CHELSA data:')
+    #print('starting downloading CHELSA data:')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
 
     dc = DeltaChangeClim(ch_climat, cm_climat, refps,
                          refpe, fefps,
                          fefpe, output)
 
-    print('starting building climatologies data:')
+    #print('starting building climatologies data:')
     biohist = BioClim(dc.hist_pr, dc.hist_tas, dc.hist_tasmax, dc.hist_tasmin)
     biofutr = BioClim(dc.futr_pr, dc.futr_tas, dc.futr_tasmax, dc.futr_tasmin)
 
-    print('saving bioclims:')
+    #print('saving bioclims:')
     for n in range(1, 20):
         name = output + 'CHELSA' + '_' + cm_climat.tas.institution_id + '_' \
                + cm_climat.tas.source_id + '_' + str('bio' + str(n)) + '_' \

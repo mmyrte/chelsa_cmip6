@@ -2,7 +2,7 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
-name = "chelsa_cmip6_greenmind"
+name = "chelsa_cmip6"
 version = "1.0"
 authors = [
   { name="Dirk Nikolaus Karger", email="dirk.karger@wsl.ch" },
@@ -13,7 +13,6 @@ license = { file="LICENSE" }
 requires-python = ">=3.6"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU General Public License (GPLv3)",
     "Operating System :: OS Independent",
 ]
 
