@@ -1,27 +1,31 @@
 from distutils.core import setup
 setup(
-  name = 'chelsa_cmip6',         # How you named your package folder (MyLib)
-  packages = ['chelsa_cmip6'],   # Chose the same as "name"
-  version = '1.o',      # Start with a small number and increase it with every change you make
-  license='GNU',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
-  description = "This package contains function to create monthly high-resolution climatologies for a selected geographic area for min-, max-, and mean temperature, precipitation rate and bioclimatic variables from anomalies and using CHELSA V2.1 as baseline high resolution climatology. Only works for GCMs for which tas, tasmax, tasmin, and pr are available.",   # Give a short description about your library
-  author = 'Dirk Nikolaus Karger',                   # Type in your name
-  author_email = 'dirk.karger@wsl.ch',      # Type in your E-Mail
-  url = 'https://gitlabext.wsl.ch/karger/chelsa_cmip6_mcb.git',   # Provide either the link to your github or to your website
-  download_url = 'https://gitlabext.wsl.ch/karger/chelsa_cmip6_mcb.git/',    # I explain this later on
-  keywords = ['SOME', 'MEANINGFULL', 'KEYWORDS'],   # Keywords that define your package best
-  install_requires=[            # I get to this in a second
-          'validators',
-          'beautifulsoup4',
+  name = 'chelsa_cmip6',         
+  packages = ['chelsa_cmip6'],  
+  version = '1.0',     
+  license='GNU',        
+  description = "This package contains function to create monthly high-resolution climatologies for a selected geographic area for min-, max-, and mean temperature, precipitation rate and bioclimatic variables from anomalies and using CHELSA V2.1 as baseline high resolution climatology. Only works for GCMs for which tas, tasmax, tasmin, and pr are available.", 
+  author = 'Dirk Nikolaus Karger',                  
+  author_email = 'dirk.karger@wsl.ch',     
+  url = 'https://gitlabext.wsl.ch/karger/chelsa_cmip6_mcb.git',  
+  download_url = 'https://gitlabext.wsl.ch/karger/chelsa_cmip6_mcb.git/', 
+  keywords = ['CMIP6', 'climate', 'delta-change', 'CHELSA', 'bioclimate', 'growing degree days', 'gdd', 'bio'],  
+  install_requires=[            
+          'requests',
+          'xml',
+          'numpy',
+          'xarray',
+          'rasterio',
+          'pandas',
+          'zarr',
+          'gcsfs',
+          'datetime',
+          'scipy'
       ],
   classifiers=[
-    'Development Status :: 3 - Alpha',      # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
-    'Intended Audience :: Developers',      # Define that your audience are developers
+    'Development Status :: 3 - Alpha',      
+    'Intended Audience :: Developers',      
     'Topic :: Software Development :: Build Tools',
-    'License :: OSI Approved :: MIT License',   # Again, pick a license
-    'Programming Language :: Python :: 3',      #Specify which pyhton versions that you want to support
-    'Programming Language :: Python :: 3.4',
-    'Programming Language :: Python :: 3.5',
-    'Programming Language :: Python :: 3.6',
+    'License :: OSI Approved :: GNU License', 
   ],
 )
