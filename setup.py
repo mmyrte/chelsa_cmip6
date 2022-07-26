@@ -3,7 +3,7 @@ setup(
   name = 'chelsa_cmip6',         
   packages = ['chelsa_cmip6'],  
   version = '1.0',     
-  license='GNU',        
+  license='GNU General Public License (GPLv3)',
   description = "This package contains function to create monthly high-resolution climatologies for a selected geographic area for min-, max-, and mean temperature, precipitation rate and bioclimatic variables from anomalies and using CHELSA V2.1 as baseline high resolution climatology. Only works for GCMs for which tas, tasmax, tasmin, and pr are available.", 
   author = 'Dirk Nikolaus Karger',                  
   author_email = 'dirk.karger@wsl.ch',     
