@@ -15,17 +15,7 @@
 #You should have received a copy of the GNU General Public License
 #along with chelsa_cmip6.  If not, see <https://www.gnu.org/licenses/>.
 
-from classes.BioClim import quarter_class
-from classes.BioClim import BioClim
-from classes.BioClim import growing_degree_days
-from classes.GetClim import _get_cmip
-from classes.GetClim import interpol
-from classes.GetClim import chelsaV2
-from classes.GetClim import cmip6_clim
-from classes.GetClim import ChelsaClimat
-from classes.GetClim import CmipClimat
-from classes.GetClim import DeltaChangeClim
-from classes.GetClim import chelsa_cmip6
+from src.classes.GetClim import chelsa_cmip6
 import argparse
 
 ap = argparse.ArgumentParser(

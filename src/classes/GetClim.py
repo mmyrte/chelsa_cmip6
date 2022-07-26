@@ -17,16 +17,13 @@
 
 
 import requests
-import xml.etree.ElementTree as ET
 import numpy as np
 import xarray as xr
-import rasterio
 import pandas as pd
-import zarr
 import gcsfs
 import datetime
-from classes.BioClim import BioClim
-from classes.BioClim import growing_degree_days
+from src.classes.BioClim import BioClim
+
 
 def _esgf_search(server="https://esgf-node.llnl.gov/esg-search/search",
                   files_type="OPENDAP", local_node=True, project="CMIP6",
