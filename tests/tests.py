@@ -16,10 +16,10 @@
 #along with chelsa_cmip6.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from src.classes.BioClim import BioClim
-from src.classes.GetClim import ChelsaClimat
-from src.classes.GetClim import CmipClimat
-from src.classes.GetClim import DeltaChangeClim
+from src.chelsa_cmip6.BioClim import BioClim
+from src.chelsa_cmip6.GetClim import ChelsaClimat
+from src.chelsa_cmip6.GetClim import CmipClimat
+from src.chelsa_cmip6.GetClim import DeltaChangeClim
 
 def main():
     print('starting downloading CMIP data:')

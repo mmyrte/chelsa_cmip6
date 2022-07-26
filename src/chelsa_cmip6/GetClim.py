@@ -22,7 +22,7 @@ import xarray as xr
 import pandas as pd
 import gcsfs
 import datetime
-from src.classes.BioClim import BioClim
+from src.chelsa_cmip6.BioClim import BioClim
 
 
 def _esgf_search(server="https://esgf-node.llnl.gov/esg-search/search",
