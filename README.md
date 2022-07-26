@@ -12,7 +12,7 @@ CHELSA Project: (CHELSA, <https://www.chelsa-climate.org/>).
 
 COPYRIGHT
 ---------
-(C) 2021 Dirk Nikolaus Karger
+(C) 2022 Dirk Nikolaus Karger
 
 
 
