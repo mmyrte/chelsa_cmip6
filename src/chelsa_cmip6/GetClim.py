@@ -21,7 +21,7 @@ import xarray as xr
 import pandas as pd
 import gcsfs
 import datetime
-from src.chelsa_cmip6.BioClim import BioClim
+from chelsa_cmip6.BioClim import BioClim
 
 
 def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, source_id, member_id):

@@ -15,7 +15,7 @@
 #You should have received a copy of the GNU General Public License
 #along with chelsa_cmip6.  If not, see <https://www.gnu.org/licenses/>.
 
-from src.chelsa_cmip6.GetClim import chelsa_cmip6
+from chelsa_cmip6.GetClim import chelsa_cmip6
 import argparse
 
 ap = argparse.ArgumentParser(
