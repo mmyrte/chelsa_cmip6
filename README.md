@@ -8,15 +8,12 @@ hich tas, tasmax, tasmin, and pr are available. It is part of the
 CHELSA Project: (CHELSA, <https://www.chelsa-climate.org/>).
 
 
-
-
-COPYRIGHT
+# COPYRIGHT
 ---------
 (C) 2022 Dirk Nikolaus Karger
 
 
-
-LICENSE
+# LICENSE
 -------
 chelsa_cmip6 is free software: you can redistribute it and/or modify it under
 the terms of the GNU Affero General Public License as published by the
@@ -32,8 +29,7 @@ You should have received a copy of the GNU Affero General Public License
 along with chelsa_cmip6. If not, see <http://www.gnu.org/licenses/>.
 
 
-
-REQUIREMENTS
+# REQUIREMENTS
 ------------
 chelsa_cmip6 is written in Python 3. It has been tested to run well with the
 following Python release and package versions.
@@ -48,18 +44,32 @@ following Python release and package versions.
 - datetime 3.9.2
 - scipy 0.19.1
 
-INSTALLATION
+# INSTALLATION
 ------------
 chelsa-cmip6 can be installed on your machine in different ways:
 
-Linux:
+if you want the latest version its best if you install it directly from github:
 
-using pip: python3 -m pip install chelsa-cmip6
+#### From Github
 
+```bash
+python -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
+```
 
+if you want the latest release version, you can also install it from PyPI using:
+#### From PyPI:
 
+using pip:
+```bash
+python -m pip install chelsa-cmip6
+```
 
-HOW TO USE
+using conda:
+```bash
+
+```
+
+# HOW TO USE
 ----------
 The chelsa_cmip6 module provides functions to create monthly climatologies from climate
 simulation data from CMIP6 using climate observation data from CHELSA V.2.1
@@ -87,30 +97,63 @@ The standard reference period is 1981-01-01 - 2010-12-31. If another reference p
 chosen, the code conducts a delta change for this period as well. Best practice would be to 
 choose the standard reference period.
 
-CITATION:
-------------
-If you need a citation for the output, please refer to the article describing the high
-resolution climatologies:
-
-Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R.W., Zimmermann, N.E., Linder, P., Kessler, M. (2017). Climatologies at high resolution for the Earth land surface areas. Scientific Data. 4 170122. https://doi.org/10.1038/sdata.2017.122
-
 
 EXAMPLE: 
 ------------
-You can use the program by running the following command in the terminal:
+You can use the package in two ways 1. by importing the module in python, and 2. by using
+the chelsa_cmip6.py wrapper function in the terminal (Linux, MAC) or commandline (Windows).
 
-if you are interested in future climate data, you can run the function for example like this:
+To create future climate data within python, first import the main function by:
 
+### Using python
 
+```python
+from chelsa_cmip6.GetClim import chelsa_cmip6
+```
+
+You can then set the parameters of the chelsa_cmip6 function to create the climate data for the CMIP6 model you want.
+If we want to create climatologies and bioclimatic variables for the model MPI-ESM1-2-LR and ssp585 for the years
+2041-2070 for the region between 5.3° - 10.4° longitude, and 46.0° - 47.5° latitude and save them in your home 
+directory (~/, on a linux system), we need to set the parameters of the function as follows: 
+```python
+chelsa_cmip6(activity_id='ScenarioMIP', # activity_id, e.g. ScenarioMIP for future data
+             table_id='Amon', # temporal resolution, Amon means monthly
+             experiment_id='ssp585', # the experiment_id, e.g. ssp585 (worst case scenario) here
+             institution_id='MPI-M', # the instution_id from which the GCM is provided
+             source_id='MPI-ESM1-2-LR', # the GCM you want
+             member_id='r1i1p1f1', # the ensemble you want
+             refps='1981-01-15', # start of the reference period (see Fig. 1)
+             refpe='2010-12-15', # end of the reference period (see Fig. 1)
+             fefps='2041-01-15', # start of the future period you are interested in 
+             fefpe='2070-12-15', # end of the future period you are interested in 
+             xmin=5.3, # the longitudinal minimum of the geographic bounding box you would like to use 
+             xmax=10.4, # the longitudinal maximum of the geographic bounding box you would like to use 
+             ymin=46.0, # the latitudinal minimum of the geographic bounding box you would like to use 
+             ymax=47.5, # the latitudinal maximum of the geographic bounding box you would like to use 
+             output='~/' # the directory you want the output to be saved in 
+```
+#### on Windows:
+If you are on a windows system the 'output' parameter should be in the form windows requires it, e.g.
+
+```python
+output='C:\\Users\\your_user_name\\' # the directory you want the output to be saved in 
+```
+
+### without using python
+You can also use the function directly from the terminal if you like. The chelsa_cmip6 package comes with a wrapper function,
+that allows you to simply use it via the terminal without any python knowledge required.
+
+```bash
 python chelsa_cmip6.py --activity_id 'ScenarioMIP' --table_id 'Amon' --experiment_id 'ssp585' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '2041-01-15' --fefpe '2070-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '/home/karger/scratch/'
-
+```
 
 important is that the combination of activity_id 'ScenarioMIP' and e.g. experiment_id 'ssp585' is set to a combination that exists.
 You can also get historical data but in that case, activity_ID, experiment_id, and fefps and fefps need to be changed. E.g. 
 
 
+```bash
 python chelsa_cmip6.py --activity_id 'CMIP' --table_id 'Amon' --experiment_id 'historical' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '1851-01-15' --fefpe '1880-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '/home/karger/scratch/'
-
+```
 
 it is important that your fefps and fefpe are covered by the experiment_id and activity_id.
 
@@ -131,19 +174,22 @@ or within python by importing the chelsa_cmip6 function:
 from classes.GetClim import chelsa_cmip6
 
 
-SINGULARITY
+## SINGULARITY
 ------------
 All dependencies are also resolved in the singularity container '/singularity/chelsa_cmip6.sif'. Singularity needs to be installed on the respective linux system you are using. 
 An installation guide can be found here: https://sylabs.io/guides/3.3/user-guide/quick_start.html#quick-installation-steps
 
 If you use chelsa_cmip6 together with singularity the command should be slightly modified:
+
+```bash
 singularity exec /singularity/chelsa_cmip6.sif python3 chelsa_cmip6.py --activity_id 'CMIP' --table_id 'Amon' --experiment_id 'historical' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '1851-01-15' --fefpe '1880-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '/home/karger/scratch/'
+```
 
 tested with singularity version 3.3.0-809.g78ec427cc
 but newer versions usually work as well.
 
 
-CHECKING IF ALL NEEDED INPUT IS AVAILABLE
+## CHECKING IF ALL NEEDED INPUT IS AVAILABLE
 ------------
 Not all models and activities provide all the necessary input needed for chelsa_cmip6.py.
 chelsa_cmip6.py will only work for GCMs that are both available for the historical period
@@ -160,21 +206,27 @@ These variables are needed:
 - tasmax
 - tasmin
 
-OUTPUT
+## OUTPUT
 ------------
 The output consist of netCDF4 files. There will be different files for each variable and seperatly for
 the reference (refps - refpe) and the future period (fefps - fefpe). 
 Additionally, there will be netCDF4 files for the 
 different bioclimatic variables each for both the reference (refps - refpe) and the future period (fefps - fefpe). 
 
+## CITATION:
+------------
+If you need a citation for the output, please refer to the article describing the high
+resolution climatologies:
 
-CONTACT
+Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R.W., Zimmermann, N.E., Linder, P., Kessler, M. (2017). Climatologies at high resolution for the Earth land surface areas. Scientific Data. 4 170122. https://doi.org/10.1038/sdata.2017.122
+
+
+## CONTACT
 -------
 <dirk.karger@wsl.ch>
 
 
-
-AUTHOR
+## AUTHOR
 ------
 Dirk Nikolaus Karger
 Swiss Federal Research Institute WSL
