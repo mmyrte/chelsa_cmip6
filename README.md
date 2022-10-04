@@ -37,7 +37,7 @@ REQUIREMENTS
 ------------
 chelsa_cmip6 is written in Python 3. It has been tested to run well with the
 following Python release and package versions.
-- python 3.6.5 
+- python 3.8.10
 - xarray 0.16.2
 - requests 2.25.1
 - numpy 1.19.5
@@ -47,6 +47,15 @@ following Python release and package versions.
 - gcsfs 0.7.2
 - datetime 3.9.2
 - scipy 0.19.1
+
+INSTALLATION
+------------
+chelsa-cmip6 can be installed on your machine in different ways:
+
+Linux:
+
+using pip: python3 -m pip install chelsa-cmip6
+
 
 
 
