@@ -47,16 +47,13 @@ following Python release and package versions.
 # INSTALLATION
 ------------
 chelsa-cmip6 can be installed on your machine in different ways:
-
-If you want the latest version its best if you install it directly from github:
-
 ## On Linux / Mac
 
 Linux or Mac usually come already with a version of python preinstalled. 
 #### From Github
-
+If you want the latest version its best if you install it directly from github:
 Example for Ubuntu 20.04
-if you have not installed git on your linux machine yet, the apt package management tool is the easiest way to install Git.
+if you have not installed Git on your linux machine yet, the apt package management tool is the easiest way to install Git.
 
 1. To update the packages, launch a terminal window, and enter:
 ```bash
@@ -80,11 +77,44 @@ using pip:
 ```bash
 python -m pip install chelsa-cmip6
 ```
+## On Windows 1X
+1. Check if python is already installed on your machine. To do so open the command line interface by:
+Press: Win + R
 
-using conda:
+2. This will open a run window:
+Type: cmd.exe and press enter
+This should open the command line interface of Windows
+
+3. In the command line interface type:
 ```bash
-
+python
 ```
+If python is already installed, you will automatically enter the command line interpreter of python. If
+Python is not already installed, a Microsoft Store window will open asking you to install Python. Click 'Get'
+and install Python. Make sure your version is at least 3.8.
+
+4. Verify your installation by typing the following in the command line interface:
+```bash
+python --version
+```
+
+5. Install the chelsa-cmip6 package:
+5.1. If you want the latest release version, you can also install it from PyPI using:
+
+using pip:
+```bash
+python -m pip install chelsa-cmip6
+```
+
+5.2 If you want the latest version, you can also install it from Github. If you dont have Git
+installed on your machine, you can find the installers here: 
+https://git-scm.com/download/win
+
+Follow the steps in the installer and after completion open a new command line interface in windows and type:
+```bash
+python -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
+```
+
 
 # HOW TO USE
 ----------
