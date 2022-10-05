@@ -130,7 +130,7 @@ chelsa_cmip6(activity_id='ScenarioMIP', # activity_id, e.g. ScenarioMIP for futu
              xmax=10.4, # the longitudinal maximum of the geographic bounding box you would like to use 
              ymin=46.0, # the latitudinal minimum of the geographic bounding box you would like to use 
              ymax=47.5, # the latitudinal maximum of the geographic bounding box you would like to use 
-             output='~/' # the directory you want the output to be saved in 
+             output='~/') # the directory you want the output to be saved in 
 ```
 #### on Windows:
 If you are on a windows system the 'output' parameter should be in the form windows requires it, e.g.
