@@ -118,8 +118,8 @@ the run_chelsa_cmip6.py wrapper function in the terminal (Linux, MAC) or command
 
 To create future climate data within python, first import the main function by:
 
-### Using python
-
+## Using python
+------------
 ```python
 from chelsa_cmip6.GetClim import chelsa_cmip6
 ```
@@ -152,7 +152,8 @@ If you are on a windows system the 'output' parameter should be in the form wind
 output='C:/Users/your_user_name/' # the directory you want the output to be saved in 
 ```
 
-### Use chelsa_cmip6 without using python directly
+## Use chelsa_cmip6 without using python directly
+------------
 You can also use the function directly from the terminal if you like. The chelsa_cmip6 package comes with a wrapper function,
 run_chelsa_cmip6.py that allows you to simply use it via the terminal without any python knowledge required. It means however that you have to add directory where the wrapper function run_chelsa_cmip6.py is located to your PATH variable, so that your system knows where to look for it. 
 
