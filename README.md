@@ -41,7 +41,7 @@ using pip:
 ```bash
 python -m pip install chelsa-cmip6
 ```
-## On Windows 10 - 11
+## On Windows
 #### Install python:
 1. Check if python is already installed on your machine. To do so open the command line interface by:
 Press: Win + R
@@ -214,21 +214,13 @@ run_chelsa_cmip6.py --activity_id "CMIP" --table_id "Amon" --experiment_id "hist
 
 it is also important that your fefps and fefpe are covered by the experiment_id and activity_id.
 
-
 These reference periods are possible for example:
-
 
 'ScenarioMIP' - 2016-01-01 - 2100-12-31
 
-
 'CMIP' - 1850-01-01 - 2015-12-31
 
-
 refps and refpe need to be in the range 1850-01-01 - 2015-12-31.
-
-
-or within python by importing the chelsa_cmip6 function:
-from classes.GetClim import chelsa_cmip6
 
 
 # REQUIREMENTS
