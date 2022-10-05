@@ -116,21 +116,21 @@ If we want to create climatologies and bioclimatic variables for the model MPI-E
 2041-2070 for the region between 5.3° - 10.4° longitude, and 46.0° - 47.5° latitude and save them in your home 
 directory (~/, on a linux system), we need to set the parameters of the function as follows: 
 ```python
-chelsa_cmip6(activity_id='ScenarioMIP', # activity_id, e.g. ScenarioMIP for future data
-             table_id='Amon', # temporal resolution, Amon means monthly
-             experiment_id='ssp585', # the experiment_id, e.g. ssp585 (worst case scenario) here
-             institution_id='MPI-M', # the instution_id from which the GCM is provided
-             source_id='MPI-ESM1-2-LR', # the GCM you want
-             member_id='r1i1p1f1', # the ensemble you want
-             refps='1981-01-15', # start of the reference period (see Fig. 1)
-             refpe='2010-12-15', # end of the reference period (see Fig. 1)
-             fefps='2041-01-15', # start of the future period you are interested in 
-             fefpe='2070-12-15', # end of the future period you are interested in 
-             xmin=5.3, # the longitudinal minimum of the geographic bounding box you would like to use 
-             xmax=10.4, # the longitudinal maximum of the geographic bounding box you would like to use 
-             ymin=46.0, # the latitudinal minimum of the geographic bounding box you would like to use 
-             ymax=47.5, # the latitudinal maximum of the geographic bounding box you would like to use 
-             output='~/') # the directory you want the output to be saved in 
+chelsa_cmip6(activity_id='ScenarioMIP', 
+             table_id='Amon', 
+             experiment_id='ssp585', 
+             institution_id='MPI-M', 
+             source_id='MPI-ESM1-2-LR', 
+             member_id='r1i1p1f1', 
+             refps='1981-01-15', 
+             refpe='2010-12-15', 
+             fefps='2041-01-15', 
+             fefpe='2070-12-15', 
+             xmin=5.3, 
+             xmax=10.4,
+             ymin=46.0, 
+             ymax=47.5,
+             output='~/') 
 ```
 #### on Windows:
 If you are on a windows system the 'output' parameter should be in the form windows requires it, e.g.
