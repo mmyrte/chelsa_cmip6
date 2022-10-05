@@ -10,7 +10,7 @@ CHELSA Project: (CHELSA, <https://www.chelsa-climate.org/>).
 
 # INSTALLATION
 ------------
-chelsa-cmip6 can be installed on your machine in different ways:
+chelsa-cmip6 can be installed on your machine in different ways. It is compatible with Windows, MacOS, and Linux systems.
 ## On Linux / Mac
 
 Linux or Mac usually come already with a version of python preinstalled. 
@@ -41,7 +41,7 @@ using pip:
 ```bash
 python -m pip install chelsa-cmip6
 ```
-## On Windows 1X
+## On Windows 10 - 11
 #### Install python:
 1. Check if python is already installed on your machine. To do so open the command line interface by:
 Press: Win + R
