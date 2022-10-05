@@ -48,16 +48,33 @@ following Python release and package versions.
 ------------
 chelsa-cmip6 can be installed on your machine in different ways:
 
-if you want the latest version its best if you install it directly from github:
+If you want the latest version its best if you install it directly from github:
 
+## On Linux / Mac
+
+Linux or Mac usually come already with a version of python preinstalled. 
 #### From Github
 
+Example for Ubuntu 20.04
+if you have not installed git on your linux machine yet, the apt package management tool is the easiest way to install Git.
+
+1. To update the packages, launch a terminal window, and enter:
+```bash
+sudo apt-get update
+```
+
+2. To install from the default repositories, enter the following:
+```bash
+sudo apt-get install git
+```
+
+3. you can now install the latest version from github by typing the following command in the terminal:
 ```bash
 python -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
 ```
 
-if you want the latest release version, you can also install it from PyPI using:
 #### From PyPI:
+If you want the latest release version, you can also install it from PyPI using:
 
 using pip:
 ```bash
