@@ -8,42 +8,6 @@ hich tas, tasmax, tasmin, and pr are available. It is part of the
 CHELSA Project: (CHELSA, <https://www.chelsa-climate.org/>).
 
 
-# COPYRIGHT
----------
-(C) 2022 Dirk Nikolaus Karger
-
-
-# LICENSE
--------
-chelsa_cmip6 is free software: you can redistribute it and/or modify it under
-the terms of the GNU Affero General Public License as published by the
-Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-chelsa_cmip6 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with chelsa_cmip6. If not, see <http://www.gnu.org/licenses/>.
-
-
-# REQUIREMENTS
-------------
-chelsa_cmip6 is written in Python 3. It has been tested to run well with the
-following Python release and package versions.
-- python 3.8.10
-- xarray 0.16.2
-- requests 2.25.1
-- numpy 1.19.5
-- rasterio 1.2.1
-- pandas 1.1.5
-- zarr 2.6.1
-- gcsfs 0.7.2
-- datetime 3.9.2
-- scipy 0.19.1
-
 # INSTALLATION
 ------------
 chelsa-cmip6 can be installed on your machine in different ways:
@@ -78,6 +42,7 @@ using pip:
 python -m pip install chelsa-cmip6
 ```
 ## On Windows 1X
+#### Install python:
 1. Check if python is already installed on your machine. To do so open the command line interface by:
 Press: Win + R
 
@@ -98,15 +63,16 @@ and install Python. Make sure your version is at least 3.8.
 python --version
 ```
 
-5. Install the chelsa-cmip6 package:
-5.1. If you want the latest release version, you can also install it from PyPI using:
+#### Install the chelsa-cmip6 package:
+##### Using pip
+If you want the latest release version, you can also install it from PyPI using:
 
-using pip:
 ```bash
 python -m pip install chelsa-cmip6
 ```
 
-5.2 If you want the latest version, you can also install it from Github. If you dont have Git
+##### Using Git
+If you want the latest version, you can also install it from Github. If you dont have Git
 installed on your machine, you can find the installers here: 
 https://git-scm.com/download/win
 
@@ -221,6 +187,22 @@ or within python by importing the chelsa_cmip6 function:
 from classes.GetClim import chelsa_cmip6
 
 
+# REQUIREMENTS
+------------
+chelsa_cmip6 is written in Python 3. It has been tested to run well with the
+following Python release and package versions. The dependencies will be installed automatically.
+- python 3.8.10
+- xarray 0.16.2
+- requests 2.25.1
+- numpy 1.19.5
+- rasterio 1.2.1
+- pandas 1.1.5
+- zarr 2.6.1
+- gcsfs 0.7.2
+- datetime 3.9.2
+- scipy 0.19.1
+
+
 ## SINGULARITY
 ------------
 All dependencies are also resolved in the singularity container '/singularity/chelsa_cmip6.sif'. Singularity needs to be installed on the respective linux system you are using. 
@@ -253,12 +235,35 @@ These variables are needed:
 - tasmax
 - tasmin
 
+
 ## OUTPUT
 ------------
 The output consist of netCDF4 files. There will be different files for each variable and seperatly for
 the reference (refps - refpe) and the future period (fefps - fefpe). 
 Additionally, there will be netCDF4 files for the 
 different bioclimatic variables each for both the reference (refps - refpe) and the future period (fefps - fefpe). 
+
+
+# COPYRIGHT
+---------
+(C) 2022 Dirk Nikolaus Karger
+
+
+# LICENSE
+-------
+chelsa_cmip6 is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the
+Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+chelsa_cmip6 is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with chelsa_cmip6. If not, see <http://www.gnu.org/licenses/>.
+
 
 ## CITATION:
 ------------
