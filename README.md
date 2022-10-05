@@ -11,9 +11,9 @@ CHELSA Project: (CHELSA, <https://www.chelsa-climate.org/>).
 # INSTALLATION
 ------------
 chelsa-cmip6 can be installed on your machine in different ways. It is compatible with Windows, MacOS, and Linux systems.
-## On Linux / Mac
+## On Linux
 
-Linux or Mac usually come already with a version of python preinstalled. 
+Linux usually come already with a version of python preinstalled. 
 #### From Github
 If you want the latest version its best if you install it directly from github:
 Example for Ubuntu 20.04
