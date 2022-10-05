@@ -114,7 +114,7 @@ choose the standard reference period.
 EXAMPLE: 
 ------------
 You can use the package in two ways 1. by importing the module in python, and 2. by using
-the chelsa_cmip6.py wrapper function in the terminal (Linux, MAC) or commandline (Windows).
+the run_chelsa_cmip6.py wrapper function in the terminal (Linux, MAC) or command prompt (Windows).
 
 To create future climate data within python, first import the main function by:
 
@@ -149,15 +149,29 @@ chelsa_cmip6(activity_id='ScenarioMIP',
 If you are on a windows system the 'output' parameter should be in the form windows requires it, e.g.
 
 ```python
-output='C:\\Users\\your_user_name\\' # the directory you want the output to be saved in 
+output='C:/Users/your_user_name/' # the directory you want the output to be saved in 
 ```
 
-### without using python
+### Use chelsa_cmip6 without using python directly
 You can also use the function directly from the terminal if you like. The chelsa_cmip6 package comes with a wrapper function,
 run_chelsa_cmip6.py that allows you to simply use it via the terminal without any python knowledge required. It means however that you have to add directory where the wrapper function run_chelsa_cmip6.py is located to your PATH variable, so that your system knows where to look for it. 
 
 #### on Linux
-1. Set the 
+1. Find the directory in which chelsa_cmip6 is located by typing the following in the terminal:
+```bash
+python -c "import chelsa_cmip6; print(chelsa_cmip6.__file__);"
+```
+The printed path without the '\__init__.py' at the end is the path you will need to add to your PATH variable.
+
+2. You can now add it to your PATH variable by using:
+```bash
+export PATH="your_path:$PATH"
+```
+
+3. Restart your terminal. You should now be able to use chelsa_cmip6 by running e.g. the following in the terminal:
+```bash 
+run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" --experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" --fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output "~/"
+```
 
 #### on Windows
 On Windows you need to first find out where the python package is installed. You can do so by typing the following in the command line interface:
