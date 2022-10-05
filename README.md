@@ -154,7 +154,39 @@ output='C:\\Users\\your_user_name\\' # the directory you want the output to be s
 
 ### without using python
 You can also use the function directly from the terminal if you like. The chelsa_cmip6 package comes with a wrapper function,
-that allows you to simply use it via the terminal without any python knowledge required.
+that allows you to simply use it via the terminal without any python knowledge required. It means however that you have to 
+add the wrapper function chelsa_cmip6.py to your PATH variable, so that your system knows where to look for it.
+
+#### on Linux
+1. Set the 
+
+#### on Windows
+On Windows you need to first find out where the python package is installed. You can do so by typing the following in the command line interface:
+
+```bash
+python -c "import chelsa_cmip6; print(chelsa_cmip6.__file__);"
+```
+
+The printed path without the '\__init__.py' at the end is the path you will need to add to your path variable. On my machine it 
+looks like this:
+
+```bash 
+C:\Users\Administrator\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\chelsa_cmip6\__init__.py
+```
+
+You need to add this path to your PATH environment variable. To do so you need to open a command prompt as Administrator. To do so, you need to:
+1. Press: Win + R
+2. Type: cmd.exe
+3. Use Ctrl + Shift + Click/Tap on the OK button
+
+4. Type the following in the command prompt, replacing C:\your\path\here with the your local path
+```bash 
+setx /M path "%path%;C:\your\path\here"
+```
+5. Close the command prompt and open a new one. Then type the following:
+```bash 
+chelsa_cmip6.py -h
+```
 
 ```bash
 python chelsa_cmip6.py --activity_id 'ScenarioMIP' --table_id 'Amon' --experiment_id 'ssp585' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '2041-01-15' --fefpe '2070-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '/home/karger/scratch/'
