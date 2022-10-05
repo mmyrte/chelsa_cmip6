@@ -154,8 +154,7 @@ output='C:\\Users\\your_user_name\\' # the directory you want the output to be s
 
 ### without using python
 You can also use the function directly from the terminal if you like. The chelsa_cmip6 package comes with a wrapper function,
-that allows you to simply use it via the terminal without any python knowledge required. It means however that you have to 
-add the wrapper function chelsa_cmip6.py to your PATH variable, so that your system knows where to look for it.
+run_chelsa_cmip6.py that allows you to simply use it via the terminal without any python knowledge required. It means however that you have to add directory where the wrapper function run_chelsa_cmip6.py is located to your PATH variable, so that your system knows where to look for it. 
 
 #### on Linux
 1. Set the 
@@ -183,24 +182,23 @@ You need to add this path to your PATH environment variable. To do so you need t
 ```bash 
 setx /M path "%path%;C:\your\path\here"
 ```
-5. Close the command prompt and open a new one. Then type the following:
+5. Close the command prompt and open a new one. You now should be able to run the the function now by e.g. typing:
 ```bash 
-chelsa_cmip6.py -h
+run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" --experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" --fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output "C:/Users/<your_user_name>/"
 ```
 
 ```bash
-python chelsa_cmip6.py --activity_id 'ScenarioMIP' --table_id 'Amon' --experiment_id 'ssp585' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '2041-01-15' --fefpe '2070-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '/home/karger/scratch/'
+run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" --experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" --fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output "~/"
 ```
 
 important is that the combination of activity_id 'ScenarioMIP' and e.g. experiment_id 'ssp585' is set to a combination that exists.
 You can also get historical data but in that case, activity_ID, experiment_id, and fefps and fefps need to be changed. E.g. 
 
-
 ```bash
-python chelsa_cmip6.py --activity_id 'CMIP' --table_id 'Amon' --experiment_id 'historical' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '1851-01-15' --fefpe '1880-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '/home/karger/scratch/'
+run_chelsa_cmip6.py --activity_id "CMIP" --table_id "Amon" --experiment_id "historical" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" --fefps "1851-01-15" --fefpe "1880-12-15" --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '~/'
 ```
 
-it is important that your fefps and fefpe are covered by the experiment_id and activity_id.
+it is also important that your fefps and fefpe are covered by the experiment_id and activity_id.
 
 
 These reference periods are possible for example:
