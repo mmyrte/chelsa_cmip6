@@ -223,6 +223,28 @@ These reference periods are possible for example:
 
 refps and refpe need to be in the range 1850-01-01 - 2015-12-31.
 
+## chelsa_cmip6 in R via the reticulate package
+------------
+You can also use the chelsa_cmip6 package in R if you want to itegrate it into your R workflow. To do so open an R console or R Studio and follow the steps below. Important: You still need to have python and the chelsa_cmip6 package installed (see instructions above).
+
+Install and load the reticulate package
+```R
+install.packages("reticulate",dependencies = TRUE)
+library(reticulate)
+```
+
+The import() function enables you to import the chelsa_cmip6 module and call it’s functions directly from R.
+```R
+chelsa_cmip6 <- import('chelsa_cmip6')
+```
+
+You can then use the chelsa_cmip6 function in R the same you would in python.
+```R
+
+
+
+
+
 
 # REQUIREMENTS
 ------------
