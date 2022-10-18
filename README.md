@@ -81,6 +81,20 @@ Follow the steps in the installer and after completion open a new command line i
 python -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
 ```
 
+##### GDAL and rasterio
+chelsa-cmip6 depends on rasterio, which in turn depends on GDAL. Sometimes these two modules can create problems with the 
+installation routine. If the installation hangs while installing the rasterio module, you can try installing both modules manually
+before installing chelsa-cmip6.
+
+GDAL can be quite complex to build and install, particularly on Windows and MacOS
+If you run into problems follow the steps provided for your respective system here:
+
+You can get information how to install GDAL on your system here: https://pypi.org/project/GDAL/
+
+After the manual installation of GDAL you can install rasterio by:
+```bash
+python -m pip install rasterio
+```
 
 # HOW TO USE
 ----------
