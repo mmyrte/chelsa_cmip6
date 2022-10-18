@@ -258,9 +258,6 @@ You can then use the chelsa_cmip6 function in R the same you would in python.
 ```
 
 
-
-
-
 # REQUIREMENTS
 ------------
 chelsa_cmip6 is written in Python 3. It has been tested to run well with the
