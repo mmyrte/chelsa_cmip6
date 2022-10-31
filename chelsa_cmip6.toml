@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
 name = "chelsa_cmip6"
-version = "1.0"
+version = "1.0.1"
 authors = [
   { name="Dirk Nikolaus Karger", email="dirk.karger@wsl.ch" },
 ]
