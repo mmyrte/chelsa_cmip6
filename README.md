@@ -239,7 +239,8 @@ refps and refpe need to be in the range 1850-01-01 - 2015-12-31.
 
 ## chelsa_cmip6 in R via the reticulate package
 ------------
-You can also use the chelsa_cmip6 package in R if you want to itegrate it into your R workflow. To do so open an R console or R Studio and follow the steps below. Important: You still need to have python and the chelsa_cmip6 package installed (see instructions above).
+You can also use the chelsa_cmip6 package in R if you want to integrate it into your R workflow. To do so open an R console or R Studio and follow the steps below. Important: You still need to have python and the chelsa_cmip6 package installed (see instructions above).
+Tested with R 4.2.1 in Windows 10
 
 Install and load the reticulate package
 ```R
@@ -247,14 +248,33 @@ install.packages("reticulate",dependencies = TRUE)
 library(reticulate)
 ```
 
+Install and load the chelsa-cmip6 package
+```R
+py_install("chelsa-cmip6", pip=T)
+```
+
 The import() function enables you to import the chelsa_cmip6 module and call it’s functions directly from R.
 ```R
 chelsa_cmip6 <- import('chelsa_cmip6')
 ```
 
-You can then use the chelsa_cmip6 function in R the same you would in python.
+You can then use the chelsa_cmip6 function in R the same you would in python. Be aware that the function might run for a while before it creates any output.
 ```R
-
+chelsa_cmip6$GetClim$chelsa_cmip6(activity_id='ScenarioMIP', 
+                                  table_id='Amon', 
+                                  experiment_id='ssp585', 
+                                  institution_id='MPI-M', 
+                                  source_id='MPI-ESM1-2-LR', 
+                                  member_id='r1i1p1f1', 
+                                  refps='1981-01-15', 
+                                  refpe='2010-12-15', 
+                                  fefps='2041-01-15', 
+                                  fefpe='2070-12-15', 
+                                  xmin=5.3, 
+                                  xmax=10.4,
+                                  ymin=46.0, 
+                                  ymax=47.5,
+                                  output='~/')
 ```
 
 
@@ -278,6 +298,8 @@ following Python release and package versions. The dependencies will be installe
 ------------
 All dependencies are also resolved in the singularity container '/singularity/chelsa_cmip6.sif'. Singularity needs to be installed on the respective linux system you are using. 
 An installation guide can be found here: https://sylabs.io/guides/3.3/user-guide/quick_start.html#quick-installation-steps
+
+The singularity container is available only here: https://gitlabext.wsl.ch/karger/chelsa_cmip6/-/blob/master/singularity/chelsa_cmip6.sif
 
 If you use chelsa_cmip6 together with singularity the command should be slightly modified:
 
