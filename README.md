@@ -192,21 +192,21 @@ of the function. Here we show an example using a simple loop in python. The outp
 month from 2016, 2100 for tas, tasmax, tasmin, and pr, and an annual timeseries for the bioclimatic variables.
 ```python
 for year in range(2016,2101):
-chelsa_cmip6(activity_id='ScenarioMIP', 
-             	table_id='Amon', 
-             	experiment_id='ssp585', 
-             	institution_id='MPI-M', 
-             	source_id='MPI-ESM1-2-LR', 
-             	member_id='r1i1p1f1', 
-             	refps='1981-01-15', 
-             	refpe='2010-12-15', 
-             	fefps=year + '-01-15', 
-             	fefpe=year + '-12-15', 
-             	xmin=5.3, 
-             	xmax=10.4,
-             	ymin=46.0, 
-             	ymax=47.5,
-             	output='~/')
+    chelsa_cmip6(activity_id='ScenarioMIP', 
+                 table_id='Amon', 
+                 experiment_id='ssp585', 
+                 institution_id='MPI-M', 
+                 source_id='MPI-ESM1-2-LR', 
+                 member_id='r1i1p1f1', 
+                 refps='1981-01-15', 
+                 refpe='2010-12-15', 
+                 fefps=year + '-01-15', 
+                 fefpe=year + '-12-15', 
+                 xmin=5.3, 
+                 xmax=10.4,
+                 ymin=46.0, 
+                 ymax=47.5,
+                 output='~/')
 ```
 
 
