@@ -124,6 +124,11 @@ The standard reference period is 1981-01-01 - 2010-12-31. If another reference p
 chosen, the code conducts a delta change for this period as well. Best practice would be to 
 choose the standard reference period.
 
+![Semantic description of image](/tests/Fig1-1.png)*My caption*
+
+
+
+
 
 EXAMPLE: 
 ------------
