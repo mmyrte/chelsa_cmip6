@@ -31,7 +31,7 @@ sudo apt-get install git
 
 3. you can now install the latest version from github by typing the following command in the terminal:
 ```bash
-python -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
+python3 -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
 ```
 
 #### From PyPI:
@@ -39,7 +39,7 @@ If you want the latest release version, you can also install it from PyPI using:
 
 using pip:
 ```bash
-python -m pip install chelsa-cmip6
+python3 -m pip install chelsa-cmip6
 ```
 ## On Windows
 #### Install python:
@@ -52,7 +52,7 @@ This should open the command line interface of Windows
 
 3. In the command line interface type:
 ```bash
-python
+python3
 ```
 If python is already installed, you will automatically enter the command line interpreter of python. If
 Python is not already installed, a Microsoft Store window will open asking you to install Python. Click 'Get'
@@ -60,7 +60,7 @@ and install Python. Make sure your version is at least 3.8.
 
 4. Verify your installation by typing the following in the command line interface:
 ```bash
-python --version
+python3 --version
 ```
 
 #### Install the chelsa-cmip6 package:
@@ -68,7 +68,7 @@ python --version
 If you want the latest release version, you can also install it from PyPI using:
 
 ```bash
-python -m pip install chelsa-cmip6
+python3 -m pip install chelsa-cmip6
 ```
 
 ##### Using Git
@@ -78,7 +78,7 @@ https://git-scm.com/download/win
 
 Follow the steps in the installer and after completion open a new command line interface in windows and type:
 ```bash
-python -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
+python3 -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
 ```
 
 ##### GDAL and rasterio
@@ -93,7 +93,7 @@ You can get information how to install GDAL on your system here: https://pypi.or
 
 After the manual installation of GDAL you can install rasterio by:
 ```bash
-python -m pip install rasterio
+python3 -m pip install rasterio
 ```
 
 # HOW TO USE
@@ -174,7 +174,7 @@ run_chelsa_cmip6.py that allows you to simply use it via the terminal without an
 #### on Linux
 1. Find the directory in which chelsa_cmip6 is located by typing the following in the terminal:
 ```bash
-python -c "import chelsa_cmip6; print(chelsa_cmip6.__file__);"
+python3 -c "import chelsa_cmip6; print(chelsa_cmip6.__file__);"
 ```
 The printed path without the '\__init__.py' at the end is the path you will need to add to your PATH variable.
 
