@@ -192,7 +192,7 @@ run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" --experiment_i
 On Windows you need to first find out where the python package is installed. You can do so by typing the following in the command line interface:
 
 ```bash
-python -c "import chelsa_cmip6; print(chelsa_cmip6.__file__);"
+python3 -c "import chelsa_cmip6; print(chelsa_cmip6.__file__);"
 ```
 
 The printed path without the '\__init__.py' at the end is the path you will need to add to your path variable. On my machine it 
