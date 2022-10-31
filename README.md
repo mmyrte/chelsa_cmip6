@@ -124,16 +124,24 @@ The standard reference period is 1981-01-01 - 2010-12-31. If another reference p
 chosen, the code conducts a delta change for this period as well. Best practice would be to 
 choose the standard reference period.
 
-![Semantic description of image](/tests/Fig1-1.png)*My caption*
 
 
 
 
-
-EXAMPLE: 
+EXAMPLES: 
 ------------
 You can use the package in two ways 1. by importing the module in python, and 2. by using
 the run_chelsa_cmip6.py wrapper function in the terminal (Linux, MAC) or command prompt (Windows).
+
+Figure 1 gives an visual example of the different model parameters for Example 1. 
+
+
+![explanation of the delta change method](/tests/Fig1-1.png)*Example of the delta change method applied on the model MPI-ESM1-2-LR for ssp585, the reference period 1981-2010, and the future period 2041-2070 (Example 1). The MPI-ESM1-2-LP gives the low resolution reference period temperature tas_low^ref  and the low resolution future period temperature tas_low^fut. The difference between these two temperatures is interpolated to 30 arcsec resolution using a qubic-spline CS(Δtas_fut^ref) and then added to the high resolution reference temperature tas_high^ref to get tas_high^fut. The parameters that need to be set to achieve the shown delta change downscaling are shown in the upper left corner. Both tas_high^ref and tas_high^fut are given as output for a specific region that is specified using the arguments: --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 .*
+
+
+
+EXAMPLE 1: 
+------------
 
 To create future climate data within python, first import the main function by:
 
@@ -142,6 +150,11 @@ To create future climate data within python, first import the main function by:
 ```python
 from chelsa_cmip6.GetClim import chelsa_cmip6
 ```
+
+Creating long term climatological normals and the related bioclimatic variables that are commonly used in species distribution modeling 
+is controlled via the fefps and fefpe parameters of the chelsa_cmip6 function. You can use function by running the following command 
+in python a python prompt (for an tutorial how to use chelsa-cmip6 in R, see Appendix II). Open a python prompt by either typing python 
+in your terminal in Linux, or a command prompt in Windows.
 
 You can then set the parameters of the chelsa_cmip6 function to create the climate data for the CMIP6 model you want.
 If we want to create climatologies and bioclimatic variables for the model MPI-ESM1-2-LR and ssp585 for the years
@@ -170,6 +183,32 @@ If you are on a windows system the 'output' parameter should be in the form wind
 ```python
 output='C:/Users/your_user_name/' # the directory you want the output to be saved in 
 ```
+
+EXAMPLE 2: 
+------------
+
+Creating a monthly timeseries for the same model requires only an adaptation of the fefps, and fefpe parameter 
+of the function. Here we show an example using a simple loop in python. The output will be a netCDF files for each 
+month from 2016, 2100 for tas, tasmax, tasmin, and pr, and an annual timeseries for the bioclimatic variables.
+```python
+for year in range(2016,2101):
+chelsa_cmip6(activity_id='ScenarioMIP', 
+             	table_id='Amon', 
+             	experiment_id='ssp585', 
+             	institution_id='MPI-M', 
+             	source_id='MPI-ESM1-2-LR', 
+             	member_id='r1i1p1f1', 
+             	refps='1981-01-15', 
+             	refpe='2010-12-15', 
+             	fefps=year + '-01-15', 
+             	fefpe=year + '-12-15', 
+             	xmin=5.3, 
+             	xmax=10.4,
+             	ymin=46.0, 
+             	ymax=47.5,
+             	output='~/')
+```
+
 
 ## Use chelsa_cmip6 without using python directly
 ------------
