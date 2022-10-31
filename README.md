@@ -185,7 +185,11 @@ export PATH="your_path:$PATH"
 
 3. Restart your terminal. You should now be able to use chelsa_cmip6 by running e.g. the following in the terminal:
 ```bash 
-run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" --experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" --fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output "~/"
+run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" \
+--experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" \
+--member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" \
+--fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 \
+--ymin 46.0 --ymax 47.5 --output "~/"
 ```
 
 #### on Windows
@@ -213,18 +217,31 @@ setx /M path "%path%;C:\your\path\here"
 ```
 5. Close the command prompt and open a new one. You now should be able to run the the function now by e.g. typing:
 ```bash 
-run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" --experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" --fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output "C:/Users/<your_user_name>/"
+run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" \
+--experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" \
+--member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" \
+--fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 \
+--ymin 46.0 --ymax 47.5 --output "C:/Users/<your_user_name>/"
 ```
 
 ```bash
-run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" --experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" --fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output "~/"
+run_chelsa_cmip6.py --activity_id "ScenarioMIP" --table_id "Amon" \
+--experiment_id "ssp585" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" \
+--member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" \
+--fefps "2041-01-15" --fefpe "2070-12-15" --xmin 5.3 --xmax 10.4 \
+--ymin 46.0 --ymax 47.5 --output "~/"
 ```
 
 important is that the combination of activity_id 'ScenarioMIP' and e.g. experiment_id 'ssp585' is set to a combination that exists.
 You can also get historical data but in that case, activity_ID, experiment_id, and fefps and fefps need to be changed. E.g. 
 
 ```bash
-run_chelsa_cmip6.py --activity_id "CMIP" --table_id "Amon" --experiment_id "historical" --institution_id "MPI-M" --source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" --refps "1981-01-15" --refpe "2010-12-15" --fefps "1851-01-15" --fefpe "1880-12-15" --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '~/'
+run_chelsa_cmip6.py --activity_id "CMIP" --table_id "Amon" \
+--experiment_id "historical" --institution_id "MPI-M" \
+--source_id "MPI-ESM1-2-LR" --member_id "r1i1p1f1" \
+--refps "1981-01-15" --refpe "2010-12-15" \
+--fefps "1851-01-15" --fefpe "1880-12-15" \
+--xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '~/'
 ```
 
 it is also important that your fefps and fefpe are covered by the experiment_id and activity_id.
@@ -304,7 +321,12 @@ The singularity container is available only here: https://gitlabext.wsl.ch/karge
 If you use chelsa_cmip6 together with singularity the command should be slightly modified:
 
 ```bash
-singularity exec /singularity/chelsa_cmip6.sif python3 chelsa_cmip6.py --activity_id 'CMIP' --table_id 'Amon' --experiment_id 'historical' --institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' --refps '1981-01-15' --refpe '2010-12-15' --fefps '1851-01-15' --fefpe '1880-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 --ymax 47.5 --output '/home/karger/scratch/'
+singularity exec /singularity/chelsa_cmip6.sif python3 chelsa_cmip6.py \
+--activity_id 'CMIP' --table_id 'Amon' --experiment_id 'historical' \
+--institution_id 'MPI-M' --source_id 'MPI-ESM1-2-LR' --member_id 'r1i1p1f1' \
+--refps '1981-01-15' --refpe '2010-12-15' --fefps '1851-01-15' \
+--fefpe '1880-12-15' --xmin 5.3 --xmax 10.4 --ymin 46.0 \
+--ymax 47.5 --output '/home/karger/scratch/'
 ```
 
 tested with singularity version 3.3.0-809.g78ec427cc
