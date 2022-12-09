@@ -342,9 +342,10 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                            refpe, fefps,
                            fefpe)
 
-    print('starting downloading CHELSA data:')
+    print('starting downloading CHELSA data (depending on your internet speed this might take a while...):')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
 
+    print('applying delta change:')
     dc = DeltaChangeClim(ch_climat, cm_climat, refps,
                          refpe, fefps,
                          fefpe, output)
