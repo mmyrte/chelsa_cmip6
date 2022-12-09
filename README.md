@@ -184,6 +184,9 @@ If you are on a windows system the 'output' parameter should be in the form wind
 output='C:/Users/your_user_name/' # the directory you want the output to be saved in 
 ```
 
+Important: Plese be aware that depending on the computer you use the function will only run if you have access to the internet, and it might take a considerable amount of time to finish as the data transfer needed is relativly large.
+
+
 EXAMPLE 2: 
 ------------
 
@@ -401,6 +404,14 @@ The output consist of netCDF4 files. There will be different files for each vari
 the reference (refps - refpe) and the future period (fefps - fefpe). 
 Additionally, there will be netCDF4 files for the 
 different bioclimatic variables each for both the reference (refps - refpe) and the future period (fefps - fefpe). 
+
+
+##  CAVEATS
+------------
+Important: 
+1. Please be aware that depending on the computer you use the function will only run if you have access to the internet. 
+2. It might take a considerable amount of time to finish as the data transfer needed is relativly large.
+3. You will need a considerable amount of RAM depending on the geographical size you choose. The example given runs with 16 GB of RAM. Below that we cannot garantee that the function will succeed.
 
 
 # COPYRIGHT
