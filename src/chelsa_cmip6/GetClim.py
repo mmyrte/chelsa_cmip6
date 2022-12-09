@@ -218,6 +218,7 @@ class ChelsaClimat:
     """
     def __init__(self, xmin, xmax, ymin, ymax):
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
+            print("getting variable: " + var)
             setattr(self, var, chelsaV2(xmin, xmax, ymin, ymax, var).get_chelsa())
 
 
