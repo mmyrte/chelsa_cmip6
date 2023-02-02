@@ -21,6 +21,7 @@ import xarray as xr
 import pandas as pd
 import gcsfs
 import datetime
+import fsspec
 from chelsa_cmip6.BioClim import BioClim
 
 
@@ -70,7 +71,7 @@ class interpol:
         self.template = template
 
     def interpolate(self):
-        res = self.ds.interp(lat=self.template["y"], lon=self.template["x"])
+        res = self.ds.interp(lat=self.template["lat"], lon=self.template["lon"])
         return res
 
 
@@ -101,8 +102,8 @@ class chelsaV2:
         :return: clipped xarray
         :rtype: xarray
         """
-        mask_lon = (ds.x >= self.xmin) & (ds.x <= self.xmax)
-        mask_lat = (ds.y >= self.ymin) & (ds.y <= self.ymax)
+        mask_lon = (ds.lon >= self.xmin) & (ds.lon <= self.xmax)
+        mask_lat = (ds.lat >= self.ymin) & (ds.lat <= self.ymax)
         cropped_ds = ds.where(mask_lon & mask_lat, drop=True)
         return cropped_ds
 
@@ -113,16 +114,28 @@ class chelsaV2:
         :return: cropped xarray
         :rtype: xarray
         """
+
         a = []
         for month in range(1, 13):
-            url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/' + self.variable_id + '/CHELSA_' + self.variable_id + '_' + '%02d' % (month,) + '_1981-2010_V.2.1.tif'
-            a.append(url)
+            url = 'https://os.zhdk.cloud.switch.ch/envicloud/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/ncdf/CHELSA_' + variable_id + '_' + '%02d' % (
+                month,) + '_1981-2010_V.2.1.nc'
+            with fsspec.open(url) as fobj:
+                ds = xr.open_dataset(fobj).chunk({'lat': 500, 'lon': 500})
+            a.append(ds)
 
-        ds = self._crop_ds_(xr.concat([xr.open_rasterio(i) for i in a], 'time'))
+        ds = self._crop_ds_(xr.concat([i for i in a], 'time'))
+
+        # old version using rasterio
+        #a = []
+        #for month in range(1, 13):
+        #    url = 'https://envicloud.os.zhdk.cloud.switch.ch/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/' + self.variable_id + '/CHELSA_' + self.variable_id + '_' + '%02d' % (month,) + '_1981-2010_V.2.1.tif'
+        #    a.append(url)
+
+        #ds = self._crop_ds_(xr.concat([xr.open_rasterio(i) for i in a], 'time'))
         if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
-            res = ds / 10 - 273.15
+            res = ds / 10 #- 273.15
         if self.variable_id == 'pr':
-            res = ds / 10
+            res = ds / 100
         return res
 
 
@@ -343,7 +356,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                            refpe, fefps,
                            fefpe)
 
-    print('starting downloading CHELSA data (depending on your internet speed this might take a while...):')
+    print('starting downloading CHELSA data (depending on your internet speed this might take a while...)')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
 
     print('applying delta change:')

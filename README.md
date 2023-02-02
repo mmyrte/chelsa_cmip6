@@ -81,8 +81,8 @@ Follow the steps in the installer and after completion open a new command line i
 python3 -m pip install git+https://gitlabext.wsl.ch/karger/chelsa_cmip6.git
 ```
 
-##### GDAL and rasterio
-chelsa-cmip6 depends on rasterio, which in turn depends on GDAL. Sometimes these two modules can create problems with the 
+##### GDAL and rasterio in chelsa-cmip6 V.1.0 & V1.1
+chelsa-cmip6 up to version  1.1. depends on rasterio, which in turn depends on GDAL. Sometimes these two modules can create problems with the 
 installation routine. If the installation hangs while installing the rasterio module, you can try installing both modules manually
 before installing chelsa-cmip6.
 
@@ -95,6 +95,9 @@ After the manual installation of GDAL you can install rasterio by:
 ```bash
 python3 -m pip install rasterio
 ```
+
+starting V.1.2 chelsa-cmip6 does not rely on rasterio anymore, but uses byte wise connections to remote CHELSA
+data stored in netcdf files.
 
 # HOW TO USE
 ----------
@@ -153,7 +156,7 @@ from chelsa_cmip6.GetClim import chelsa_cmip6
 
 Creating long term climatological normals and the related bioclimatic variables that are commonly used in species distribution modeling 
 is controlled via the fefps and fefpe parameters of the chelsa_cmip6 function. You can use function by running the following command 
-in python a python prompt (for an tutorial how to use chelsa-cmip6 in R, see Appendix II). Open a python prompt by either typing python 
+in python a python prompt. Open a python prompt by either typing python 
 in your terminal in Linux, or a command prompt in Windows.
 
 You can then set the parameters of the chelsa_cmip6 function to create the climate data for the CMIP6 model you want.

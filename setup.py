@@ -17,7 +17,8 @@ setup(
           'pandas',
           'zarr',
           'gcsfs',
-          'scipy'
+          'scipy',
+          'fsspec'
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',      
