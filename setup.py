@@ -13,7 +13,6 @@ setup(
   install_requires=[
           'numpy',
           'xarray',
-          'rasterio',
           'pandas',
           'zarr',
           'gcsfs',
