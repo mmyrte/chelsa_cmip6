@@ -18,7 +18,8 @@ setup(
           'zarr',
           'gcsfs',
           'scipy',
-          'fsspec'
+          'fsspec',
+          'dask'
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',      

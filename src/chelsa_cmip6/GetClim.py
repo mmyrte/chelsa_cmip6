@@ -22,6 +22,7 @@ import pandas as pd
 import gcsfs
 import datetime
 import fsspec
+from dask.diagnostics import ProgressBar
 from chelsa_cmip6.BioClim import BioClim
 
 
@@ -117,7 +118,7 @@ class chelsaV2:
 
         a = []
         for month in range(1, 13):
-            url = 'https://os.zhdk.cloud.switch.ch/envicloud/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/ncdf/CHELSA_' + variable_id + '_' + '%02d' % (
+            url = 'https://os.zhdk.cloud.switch.ch/envicloud/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/ncdf/CHELSA_' + self.variable_id + '_' + '%02d' % (
                 month,) + '_1981-2010_V.2.1.nc'
             with fsspec.open(url) as fobj:
                 ds = xr.open_dataset(fobj).chunk({'lat': 500, 'lon': 500})
@@ -349,24 +350,28 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     :param output: output directory, string
     """
     print('starting downloading CMIP data:')
-    cm_climat = CmipClimat(activity_id, table_id,
-                           experiment_id,
-                           institution_id, source_id,
-                           member_id, refps,
-                           refpe, fefps,
-                           fefpe)
+    with ProgressBar():
+        cm_climat = CmipClimat(activity_id, table_id,
+                               experiment_id,
+                               institution_id, source_id,
+                               member_id, refps,
+                               refpe, fefps,
+                               fefpe)
 
     print('starting downloading CHELSA data (depending on your internet speed this might take a while...)')
-    ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
+    with ProgressBar():
+        ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
 
     print('applying delta change:')
-    dc = DeltaChangeClim(ch_climat, cm_climat, refps,
-                         refpe, fefps,
-                         fefpe, output)
+    with ProgressBar():
+        dc = DeltaChangeClim(ch_climat, cm_climat, refps,
+                             refpe, fefps,
+                             fefpe, output)
 
     print('starting building climatologies data:')
-    biohist = BioClim(dc.hist_pr, dc.hist_tas, dc.hist_tasmax, dc.hist_tasmin)
-    biofutr = BioClim(dc.futr_pr, dc.futr_tas, dc.futr_tasmax, dc.futr_tasmin)
+    with ProgressBar():
+        biohist = BioClim(dc.hist_pr, dc.hist_tas, dc.hist_tasmax, dc.hist_tasmin)
+        biofutr = BioClim(dc.futr_pr, dc.futr_tas, dc.futr_tasmax, dc.futr_tasmin)
 
     print('saving bioclims:')
     for n in range(1, 20):
