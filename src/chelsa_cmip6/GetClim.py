@@ -134,9 +134,10 @@ class chelsaV2:
 
         #ds = self._crop_ds_(xr.concat([xr.open_rasterio(i) for i in a], 'time'))
         if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
-            res = ds / 10 #- 273.15
+            res = ds.assign(Band1=ds['Band1'] * 0.1)
         if self.variable_id == 'pr':
-            res = ds / 100
+            res = ds.assign(Band1=ds['Band1'] * 0.01)
+
         return res
 
 
@@ -290,10 +291,14 @@ class DeltaChangeClim:
                                  int(datetime.datetime.strptime(fefpe, '%Y-%m-%d').year)]).__round__()
 
         for per in ['futr', 'hist']:
-            setattr(self, str(per + '_pr'), getattr(ChelsaClimat, 'pr').to_dataset(name='pr').rename({'time': 'month'}).drop('band') * interpol(
+            #setattr(self, str(per + '_pr'), getattr(ChelsaClimat, 'pr').to_dataset(name='pr').rename({'time': 'month'}).drop('band') * interpol(
+            #        getattr(CmipClimat, 'pr').get_anomaly(per), getattr(ChelsaClimat, 'pr')).interpolate())
+            setattr(self, str(per + '_pr'), getattr(ChelsaClimat, 'pr').rename({'time': 'month', 'Band1': 'pr'}) * interpol(
                     getattr(CmipClimat, 'pr').get_anomaly(per), getattr(ChelsaClimat, 'pr')).interpolate())
             for var in ['tas', 'tasmax', 'tasmin']:
-                setattr(self, str(per + '_' + var), getattr(ChelsaClimat, var).to_dataset(name=var).rename({'time': 'month'}).drop('band') + interpol(
+                #setattr(self, str(per + '_' + var), getattr(ChelsaClimat, var).to_dataset(name=var).rename({'time': 'month'}).drop('band') + interpol(
+                #        getattr(CmipClimat, var).get_anomaly(per), getattr(ChelsaClimat, var)).interpolate())
+                setattr(self, str(per + '_' + var), getattr(ChelsaClimat, var).rename({'time': 'month', 'Band1': var}) + interpol(
                         getattr(CmipClimat, var).get_anomaly(per), getattr(ChelsaClimat, var)).interpolate())
 
         for var in ['tas', 'tasmax', 'tasmin', 'pr']:
@@ -359,8 +364,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                                fefpe)
 
     print('starting downloading CHELSA data (depending on your internet speed this might take a while...)')
-    with ProgressBar():
-        ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
+    ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
 
     print('applying delta change:')
     with ProgressBar():
