@@ -122,9 +122,13 @@ class chelsaV2:
                 month,) + '_1981-2010_V.2.1.nc'
             with fsspec.open(url) as fobj:
                 ds = xr.open_dataset(fobj).chunk({'lat': 500, 'lon': 500})
+                ds = self._crop_ds_(ds)
+                ds.load()
             a.append(ds)
 
-        ds = self._crop_ds_(xr.concat([i for i in a], 'time'))
+        ds = xr.concat([i for i in a], 'time')
+
+        #ds = self._crop_ds_(xr.concat([i for i in a], 'time'))
 
         # old version using rasterio
         #a = []
