@@ -19,7 +19,9 @@ setup(
           'gcsfs',
           'scipy',
           'fsspec',
-          'dask'
+          'dask',
+          'netcdf4',
+          'h5netcdf'
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',      
