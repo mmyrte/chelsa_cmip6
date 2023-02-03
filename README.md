@@ -359,6 +359,11 @@ following Python release and package versions. The dependencies will be installe
 - gcsfs 0.7.2
 - datetime 3.9.2
 - scipy 0.19.1
+- fsspec
+- dask
+- netcdf4
+- h5netcdf
+
 
 
 ## SINGULARITY
