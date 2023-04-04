@@ -358,7 +358,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     :param ymax: Maximum latitude [Decimal degree]
     :param output: output directory, string
     """
-    print('starting downloading CMIP data:')
+    print('start downloading CMIP data:')
     with ProgressBar():
         cm_climat = CmipClimat(activity_id, table_id,
                                experiment_id,
@@ -367,7 +367,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                                refpe, fefps,
                                fefpe)
 
-    print('starting downloading CHELSA data (depending on your internet speed this might take a while...)')
+    print('start downloading CHELSA data (depending on your internet speed this might take a while...)')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
 
     print('applying delta change:')
@@ -376,7 +376,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                              refpe, fefps,
                              fefpe, output)
 
-    print('starting building climatologies data:')
+    print('start building climatologies data:')
     with ProgressBar():
         biohist = BioClim(dc.hist_pr, dc.hist_tas, dc.hist_tasmax, dc.hist_tasmin)
         biofutr = BioClim(dc.futr_pr, dc.futr_tas, dc.futr_tasmax, dc.futr_tasmin)
