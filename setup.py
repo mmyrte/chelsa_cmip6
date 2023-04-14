@@ -24,7 +24,7 @@ setup(
       ],
   classifiers=[
     'Development Status :: 5 - Production/Stable',      
-    'Intended Audience :: Users',      
-    'Topic :: Software Development :: Build Tools'
+    'Intended Audience :: Science/Research',      
+    'Topic :: Scientific/Engineering :: GIS'
   ],
 )
