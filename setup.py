@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'chelsa_cmip6',         
   packages = ['chelsa_cmip6'],  
-  version = '1.1',
+  version = '1.2',
   license='GNU',
   description = "This package contains function to create monthly high-resolution climatologies for a selected geographic area for min-, max-, and mean temperature, precipitation rate and bioclimatic variables from anomalies and using CHELSA V2.1 as baseline high resolution climatology. Only works for GCMs for which tas, tasmax, tasmin, and pr are available.", 
   author = 'Dirk Nikolaus Karger',                  
@@ -23,8 +23,8 @@ setup(
           'h5netcdf'
       ],
   classifiers=[
-    'Development Status :: 3 - Alpha',      
-    'Intended Audience :: Developers',      
+    'Development Status :: 5 - Production/Stable',      
+    'Intended Audience :: Users',      
     'Topic :: Software Development :: Build Tools'
   ],
 )
