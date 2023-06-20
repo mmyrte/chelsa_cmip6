@@ -231,7 +231,6 @@ class cmip6_clim:
                                            self.table_id,
                                            self.variable_id,
                                            self.experiment_id,
-                                           self.institution_id,
                                            self.source_id,
                                            self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         else:
@@ -248,7 +247,6 @@ class cmip6_clim:
                                                self.table_id,
                                                self.variable_id,
                                                'historical',
-                                               self.institution_id,
                                                self.source_id,
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         else:
@@ -261,11 +259,10 @@ class cmip6_clim:
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         #print("historical period set... ")
         if use_esgf:
-            self.reference_period = _get_cmip('CMIP6',
+            self.reference_period = _get_esgf('CMIP6',
                                               self.table_id,
                                               self.variable_id,
                                               'historical',
-                                              self.institution_id,
                                               self.source_id,
                                               self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
         else:
@@ -434,7 +431,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     :param ymin: Minimum latitude [Decimal degree]
     :param ymax: Maximum latitude [Decimal degree]
     :param output: output directory, string
-    :param use_esgf: Use ESGF node instead of Pangeo
+    :param use_esgf: bollean, Use ESGF node instead of Pangeo, default=False
     """
     print('start downloading CMIP data:')
     with ProgressBar():
