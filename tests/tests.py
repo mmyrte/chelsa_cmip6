@@ -21,6 +21,16 @@ from src.chelsa_cmip6.GetClim import ChelsaClimat
 from src.chelsa_cmip6.GetClim import CmipClimat
 from src.chelsa_cmip6.GetClim import DeltaChangeClim
 
+
+
+
+ds1 = _get_esgf('CMIP6',table_id="Amon",
+                variable_id="tas",
+                experiment_id="ssp585",
+                source_id="MPI-ESM1-2-LR",
+                member_id="r1i1p1f1")
+
+
 def main():
     print('starting downloading CMIP data:')
     cm_climat = CmipClimat('ScenarioMIP', 'Amon',
@@ -28,7 +38,7 @@ def main():
                      'MPI-M', 'MPI-ESM1-2-LR',
                      'r1i1p1f1', '1981-01-15',
                      '2010-12-15', '2041-01-15',
-                     '2070-12-15')
+                     '2070-12-15', use_esgf=True)
 
     print('starting downloading CHELSA data:')
     ch_climat = ChelsaClimat(5.3, 10.4, 46, 47.5)

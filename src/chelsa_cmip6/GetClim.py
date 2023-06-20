@@ -26,8 +26,9 @@ from dask.diagnostics import ProgressBar
 from chelsa_cmip6.BioClim import BioClim
 from pyesgf.search import SearchConnection
 
+
 def _get_esgf(activity_id, table_id, variable_id, experiment_id,
-              instituion_id, source_id, member_id, frequency_id='mon', node='https://esgf.ceda.ac.uk/esg-search'):
+               source_id, member_id, frequency_id='mon', node='https://esgf.ceda.ac.uk/esg-search'):
     """
     Get CMIP model from ESGF via lazy loading.
 
@@ -49,7 +50,6 @@ def _get_esgf(activity_id, table_id, variable_id, experiment_id,
     ctx = conn.new_context(
         project=activity_id,
         source_id=source_id,
-        instituion_id=instituion_id,
         table_id=table_id,
         experiment_id=experiment_id,
         variable=variable_id,
@@ -58,7 +58,13 @@ def _get_esgf(activity_id, table_id, variable_id, experiment_id,
 
     result = ctx.search()[0]
     files = result.file_context().search()
-    ds = xr.open_dataset(files[0].opendap_url)
+
+    ff = []
+    for file in files:
+        print(file.opendap_url)
+        ff.append(file.opendap_url)
+
+    ds = xr.open_mfdataset(ff, combine='nested', concat_dim='time')
 
     try:
         ds['time'] = np.sort(ds['time'].values)
@@ -221,7 +227,7 @@ class cmip6_clim:
         self.fefps = fut_startdate
         self.fefpe = fut_enddate
         if use_esgf:
-            self.future_period = _get_esgf(self.activity_id,
+            self.future_period = _get_esgf('CMIP6',
                                            self.table_id,
                                            self.variable_id,
                                            self.experiment_id,
@@ -238,7 +244,7 @@ class cmip6_clim:
                                            self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         #print("future data loaded... ")
         if use_esgf:
-            self.historical_period = _get_esgf('CMIP',
+            self.historical_period = _get_esgf('CMIP6',
                                                self.table_id,
                                                self.variable_id,
                                                'historical',
@@ -255,7 +261,7 @@ class cmip6_clim:
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         #print("historical period set... ")
         if use_esgf:
-            self.reference_period = _get_cmip('CMIP',
+            self.reference_period = _get_cmip('CMIP6',
                                               self.table_id,
                                               self.variable_id,
                                               'historical',
