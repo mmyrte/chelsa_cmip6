@@ -201,13 +201,14 @@ class cmip6_clim:
     :param ref_enddate: End date of the reference_period
     :param fut_startdate: Start date of the future future_period
     :param fut_enddate: End date of the future_period
+    :param use_esgf: Use ESGF node instead of Pangeo
     """
     def __init__(self, activity_id, table_id,
                  variable_id, experiment_id,
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
-                 fut_enddate):
+                 fut_enddate, use_esgf):
         self.activity_id = activity_id
         self.table_id = table_id
         self.variable_id = variable_id
@@ -219,29 +220,56 @@ class cmip6_clim:
         self.refpe = ref_enddate
         self.fefps = fut_startdate
         self.fefpe = fut_enddate
-        self.future_period = _get_cmip(self.activity_id, 
-                                       self.table_id, 
-                                       self.variable_id, 
-                                       self.experiment_id, 
-                                       self.institution_id, 
-                                       self.source_id, 
-                                       self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
+        if use_esgf:
+            self.future_period = _get_esgf(self.activity_id,
+                                           self.table_id,
+                                           self.variable_id,
+                                           self.experiment_id,
+                                           self.institution_id,
+                                           self.source_id,
+                                           self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
+        else:
+            self.future_period = _get_cmip(self.activity_id,
+                                           self.table_id,
+                                           self.variable_id,
+                                           self.experiment_id,
+                                           self.institution_id,
+                                           self.source_id,
+                                           self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         #print("future data loaded... ")
-        self.historical_period = _get_cmip('CMIP', 
-                                           self.table_id, 
-                                           self.variable_id, 
-                                           'historical', 
-                                           self.institution_id, 
-                                           self.source_id, 
-                                           self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
+        if use_esgf:
+            self.historical_period = _get_esgf('CMIP',
+                                               self.table_id,
+                                               self.variable_id,
+                                               'historical',
+                                               self.institution_id,
+                                               self.source_id,
+                                               self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
+        else:
+            self.historical_period = _get_cmip('CMIP',
+                                               self.table_id,
+                                               self.variable_id,
+                                               'historical',
+                                               self.institution_id,
+                                               self.source_id,
+                                               self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         #print("historical period set... ")
-        self.reference_period = _get_cmip('CMIP', 
-                                          self.table_id, 
-                                          self.variable_id, 
-                                          'historical', 
-                                          self.institution_id, 
-                                          self.source_id, 
-                                          self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
+        if use_esgf:
+            self.reference_period = _get_cmip('CMIP',
+                                              self.table_id,
+                                              self.variable_id,
+                                              'historical',
+                                              self.institution_id,
+                                              self.source_id,
+                                              self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
+        else:
+            self.reference_period = _get_cmip('CMIP',
+                                              self.table_id,
+                                              self.variable_id,
+                                              'historical',
+                                              self.institution_id,
+                                              self.source_id,
+                                              self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
         #print("reference period set... done")
 
     def get_anomaly(self, period):
@@ -297,20 +325,21 @@ class CmipClimat:
     :param ref_enddate: End date of the reference_period
     :param fut_startdate: Start date of the future future_period
     :param fut_enddate: End date of the future_period
+    :param use_esgf: Use ESGF node instead of Pangeo
     """
     def __init__(self, activity_id, table_id,
                  experiment_id,
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
-                 fut_enddate):
+                 fut_enddate, use_esgf):
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
             setattr(self, var, cmip6_clim(activity_id, table_id,
                              var, experiment_id,
                              institution_id, source_id,
                              member_id, ref_startdate,
                              ref_enddate, fut_startdate,
-                             fut_enddate))
+                             fut_enddate, use_esgf))
 
 
 class DeltaChangeClim:
@@ -380,7 +409,7 @@ class DeltaChangeClim:
 
 
 def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, 
-                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output):
+                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output, use_esgf=False):
     """ 
     Calculate chelsa cmip 6 climatological normals and bioclimatic variables
     
@@ -399,6 +428,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     :param ymin: Minimum latitude [Decimal degree]
     :param ymax: Maximum latitude [Decimal degree]
     :param output: output directory, string
+    :param use_esgf: Use ESGF node instead of Pangeo
     """
     print('start downloading CMIP data:')
     with ProgressBar():
@@ -407,7 +437,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                                institution_id, source_id,
                                member_id, refps,
                                refpe, fefps,
-                               fefpe)
+                               fefpe, use_esgf)
 
     print('start downloading CHELSA data (depending on your internet speed this might take a while...)')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
