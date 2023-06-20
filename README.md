@@ -178,7 +178,8 @@ chelsa_cmip6(activity_id='ScenarioMIP',
              xmax=10.4,
              ymin=46.0, 
              ymax=47.5,
-             output='~/') 
+             output='~/',
+             use_esgf=False) 
 ```
 #### on Windows:
 If you are on a windows system the 'output' parameter should be in the form windows requires it, e.g.
@@ -404,6 +405,9 @@ These variables are needed:
 - tas
 - tasmax
 - tasmin
+
+Important: As chelsa_cmip6 is using by default the Pangeo archive, there might be GCMs which are not available. In 
+that case the 'use_esgf' flag in che chelsa_cmip6() function can be set to 'True', to use the ESGF data archive instead.
 
 
 ## OUTPUT
