@@ -24,6 +24,48 @@ import datetime
 import fsspec
 from dask.diagnostics import ProgressBar
 from chelsa_cmip6.BioClim import BioClim
+from pyesgf.search import SearchConnection
+
+def _get_esgf(activity_id, table_id, variable_id, experiment_id,
+              instituion_id, source_id, member_id, frequency_id='mon', node='https://esgf.ceda.ac.uk/esg-search'):
+    """
+    Get CMIP model from ESGF via lazy loading.
+
+    :param activity_id: the activity_id according to CMIP6
+    :param table_id: the table id according to CMIP6
+    :param experiment_id: the experiment_id according to CMIP6
+    :param instituion_id: the instituion_id according to CMIP6
+    :param source_id: the source_id according to CMIP6
+    :param member_id: the member_id according to CMIP6
+    :param frequency_id: the freqency_id according to CMIP6
+    :param node: ESGF search node, default: https://esgf.ceda.ac.uk/esg-search
+
+    :return: xarray dataset
+    :rtype: xarray
+    """
+    conn = SearchConnection(node,
+                            distrib=True)
+
+    ctx = conn.new_context(
+        project=activity_id,
+        source_id=source_id,
+        instituion_id=instituion_id,
+        table_id=table_id,
+        experiment_id=experiment_id,
+        variable=variable_id,
+        variant_label=member_id,
+        frequency=frequency_id)
+
+    result = ctx.search()[0]
+    files = result.file_context().search()
+    ds = xr.open_dataset(files[0].opendap_url)
+
+    try:
+        ds['time'] = np.sort(ds['time'].values)
+    except Exception:
+        pass
+
+    return ds
 
 
 def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, source_id, member_id):
