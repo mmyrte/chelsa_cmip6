@@ -57,6 +57,8 @@ ap.add_argument('-ym', '--ymax', type=float,
                 help="maximum latitudinal extent of the boundary box, float")
 ap.add_argument('-o', '--output', type=str,
                 help="output directory, needs to exist, string")
+ap.add_argument('-esfg', '--esgf', type=bool,
+                help="use esgf instead of pangeo, default=False, string")
 
 args = ap.parse_args()
 print("Downscaling:")
@@ -78,5 +80,6 @@ if __name__ == '__main__':
                  xmax=args.xmax,
                  ymin=args.ymin,
                  ymax=args.ymax,
-                 output=args.output)
+                 output=args.output,
+                 use_esgf=True)
 
