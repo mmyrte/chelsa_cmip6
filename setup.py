@@ -20,7 +20,8 @@ setup(
           'fsspec',
           'dask',
           'netcdf4',
-          'h5netcdf'
+          'h5netcdf',
+          'pyesgf'
       ],
   classifiers=[
     'Development Status :: 5 - Production/Stable',      

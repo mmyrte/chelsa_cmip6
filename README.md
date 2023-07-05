@@ -197,6 +197,8 @@ EXAMPLE 2:
 Creating a monthly timeseries for the same model requires only an adaptation of the fefps, and fefpe parameter 
 of the function. Here we show an example using a simple loop in python. The output will be a netCDF files for each 
 month from 2016, 2100 for tas, tasmax, tasmin, and pr, and an annual timeseries for the bioclimatic variables.
+Notice the change in dates in fefps and fefpe, which need to be the end and start of the year. If the model you choose uses a 360 day calender (e.g. UKESM1-0-LL), the last day of the year is the 30th. 
+
 ```python
 for year in range(2016,2101):
     chelsa_cmip6(activity_id='ScenarioMIP', 
@@ -354,7 +356,7 @@ following Python release and package versions. The dependencies will be installe
 - xarray 0.16.2
 - requests 2.25.1
 - numpy 1.19.5
-- rasterio 1.2.1
+- rasterio 1.2.1 (not needed after version 1.1)
 - pandas 1.1.5
 - zarr 2.6.1
 - gcsfs 0.7.2
@@ -364,6 +366,7 @@ following Python release and package versions. The dependencies will be installe
 - dask
 - netcdf4
 - h5netcdf
+- pyesgf
 
 
 
