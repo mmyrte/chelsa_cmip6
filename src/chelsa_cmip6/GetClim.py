@@ -25,7 +25,7 @@ import fsspec
 from dask.diagnostics import ProgressBar
 from chelsa_cmip6.BioClim import BioClim
 from pyesgf.search import SearchConnection
-
+from siphon.catalog import TDSCatalog
 
 def _get_esgf(activity_id, table_id, variable_id, experiment_id,
                source_id, member_id, frequency_id='mon', node='https://esgf.ceda.ac.uk/esg-search'):
@@ -104,6 +104,50 @@ def _get_cmip(activity_id, table_id, variable_id, experiment_id, instituion_id, 
         pass
 
     return ds
+
+
+
+def _get_cordex(activity_id, region, variable_id, experiment_id,
+                instituion_id, source_id, downscaling_id, member_id, table_id='day'):
+    """
+    Get CORDEX model from hub.climate4r.ifca.es via lazy loading.
+
+    :param activity_id: the activity_id according to CMIP6
+    :param region: the cordex region, e.g. AFR-22
+    :param experiment_id: the experiment_id
+    :param instituion_id: the instituion_id
+    :param source_id: the source_id
+    :param member_id: the member_id
+    :param table_id: the table id
+
+    :return: xarray dataset
+    :rtype: xarray
+    """
+
+    cat_url = 'https://hub.climate4r.ifca.es/thredds/catalog/files/ESGF/interp025/' + activity_id
+    + '/output/' + region + '/'+ instituion_id + '/' + source_id + '/' + experiment_id
+    + '/' + member_id + '/' + downscaling_id + '/v1/' + table_id + '/' + variable_id + '/v20191015/catalog.xml'
+
+    cat = TDSCatalog(cat_url)
+
+    ff = []
+    for i in range(0, len(cat.datasets)):
+        access_urls_l = cat.datasets[i].access_urls
+        print(access_urls_l['OpenDAP'])
+        ff.append(access_urls_l['OpenDAP'])
+
+    ds = xr.open_mfdataset(ff, combine='nested', concat_dim='time')
+    ds = ds.resample(time="MS").mean()
+
+    try:
+        ds['time'] = np.sort(ds['time'].values)
+    except Exception:
+        pass
+
+    return ds
+
+
+
 
 
 class interpol:
