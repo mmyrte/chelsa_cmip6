@@ -137,7 +137,7 @@ def _get_cordex(activity_id, region, variable_id, experiment_id,
         print(access_urls_l['OpenDAP'])
         ff.append(access_urls_l['OpenDAP'])
 
-    ds = xr.open_mfdataset(ff, combine='nested', concat_dim='time')
+    ds = xr.open_mfdataset(ff, combine='nested', concat_dim='time', parallel=True)
     ds = ds.resample(time="MS").mean()
     ds = ds.rename({'longitude': 'lon', 'latitude': 'lat'})
     ds = ds.assign_coords(lon=(ds.lon + 180).sortby('lon'))
