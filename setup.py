@@ -21,7 +21,7 @@ setup(
           'dask',
           'netcdf4',
           'h5netcdf',
-          'pyesgf',
+          'esgf-pyclient',
           'siphon'
       ],
   classifiers=[
