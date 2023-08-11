@@ -21,7 +21,8 @@ setup(
           'dask',
           'netcdf4',
           'h5netcdf',
-          'pyesgf'
+          'pyesgf',
+          'siphon'
       ],
   classifiers=[
     'Development Status :: 5 - Production/Stable',      
