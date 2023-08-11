@@ -493,8 +493,8 @@ class DeltaChangeClim:
 
 
 def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, 
-                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output,
-                 use_esgf=False, region=None, downscaling_id=False, version=None):
+                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output, use_esgf=False, region=None,
+                 downscaling_id=False, version=None):
     """ 
     Calculate chelsa cmip 6 climatological normals and bioclimatic variables
     
@@ -516,7 +516,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     :param use_esgf: bollean, Use ESGF node instead of Pangeo, default=False
     :param region: CORDEX region, only used for CORDEX
     :param downscaling_id: downscaling model, only used for CORDEX
-    :param verion: version id, only used for CORDEX
+    :param version: version id, only used for CORDEX
     """
     print('start downloading CMIP data:')
     with ProgressBar():
