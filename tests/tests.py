@@ -84,3 +84,27 @@ def main():
 if __name__ == '__main__':
     main()
 
+
+
+https://hub.climate4r.ifca.es/thredds/catalog/files/ESGF/interp025/CORDEX/output/AFR-22/GERICS/MOHC-HadGEM2-ES/rcp85/r1i1p1/REMO2015/v1/day/tas/v20191029/catalog.html
+ds1 = _get_cordex(activity_id='CORDEX', region='AFR-22', variable_id='tas', experiment_id='rcp85',
+                instituion_id='GERICS', source_id='MOHC-HadGEM2-ES', downscaling_id='REMO2015', member_id='r1i1p1', table_id='day')
+
+chelsa_cmip6(activity_id='CORDEX',
+             table_id='Amon',
+             experiment_id='rcp85',
+             institution_id='GERICS',
+             source_id='MOHC-HadGEM2-ES',
+             member_id='r1i1p1',
+             refps='1981-01-15',
+             refpe='2010-12-15',
+             fefps='2041-01-15',
+             fefpe='2070-12-15',
+             xmin=34.75,
+             xmax=38.75,
+             ymin=-4.25,
+             ymax=-1.75,
+             output='~/',
+             use_esgf=False,
+             region='AFR-22',
+             downscaling_id='REMO2015')
