@@ -275,7 +275,7 @@ class cmip6_clim:
         self.downscaling_id = downscaling_id
         self.region = region
         self.version = version
-        if region:
+        if region not False:
             self.future_period = _get_cordex(activity_id='CORDEX',
                                              region=self.region,
                                              variable_id=self.variable_id,
@@ -301,7 +301,7 @@ class cmip6_clim:
                                            self.source_id,
                                            self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         #print("future data loaded... ")
-        if region:
+        if region not False:
             self.historical_period = _get_cordex(activity_id='CORDEX',
                                              region=self.region,
                                              variable_id=self.variable_id,
@@ -327,7 +327,7 @@ class cmip6_clim:
                                                self.source_id,
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         #print("historical period set... ")
-        if region:
+        if region not False:
             self.reference_period = _get_cordex(activity_id='CORDEX',
                                              region=self.region,
                                              variable_id=self.variable_id,
