@@ -111,3 +111,11 @@ chelsa_cmip6(activity_id='CORDEX',
              region='AFR-22',
              downscaling_id='REMO2015',
              version='v20191029')
+
+
+region = 'AFR-22'
+
+if region is not False:
+    print('is not False')
+else:
+    print(region)
