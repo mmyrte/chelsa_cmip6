@@ -285,14 +285,14 @@ class cmip6_clim:
                                              downscaling_id=self.downscaling_id,
                                              member_id=self.member_id,
                                              version=self.version).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
-        if use_esgf:
+        if use_esgf is True and region is False:
             self.future_period = _get_esgf('CMIP6',
                                            self.table_id,
                                            self.variable_id,
                                            self.experiment_id,
                                            self.source_id,
                                            self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
-        else:
+        if use_esgf is False and region is False:
             self.future_period = _get_cmip(self.activity_id,
                                            self.table_id,
                                            self.variable_id,
@@ -311,14 +311,14 @@ class cmip6_clim:
                                              downscaling_id=self.downscaling_id,
                                              member_id=self.member_id,
                                              version=self.version).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
-        if use_esgf:
+        if use_esgf is True and region is False:
             self.historical_period = _get_esgf('CMIP6',
                                                self.table_id,
                                                self.variable_id,
                                                'historical',
                                                self.source_id,
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
-        else:
+        if use_esgf is False and region is False:
             self.historical_period = _get_cmip('CMIP',
                                                self.table_id,
                                                self.variable_id,
@@ -337,14 +337,14 @@ class cmip6_clim:
                                              downscaling_id=self.downscaling_id,
                                              member_id=self.member_id,
                                              version=self.version).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
-        if use_esgf:
+        if use_esgf is True and region is False:
             self.reference_period = _get_esgf('CMIP6',
                                               self.table_id,
                                               self.variable_id,
                                               'historical',
                                               self.source_id,
                                               self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
-        else:
+        if use_esgf is False and region is False:
             self.reference_period = _get_cmip('CMIP',
                                               self.table_id,
                                               self.variable_id,
