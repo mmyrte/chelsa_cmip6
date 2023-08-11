@@ -90,6 +90,8 @@ https://hub.climate4r.ifca.es/thredds/catalog/files/ESGF/interp025/CORDEX/output
 ds1 = _get_cordex(activity_id='CORDEX', region='AFR-22', variable_id='tas', experiment_id='rcp85',
                 instituion_id='GERICS', source_id='MOHC-HadGEM2-ES', downscaling_id='REMO2015', member_id='r1i1p1', table_id='day', version='v20191029')
 
+from chelsa_cmip6.GetClim import chelsa_cmip6
+
 chelsa_cmip6(activity_id='CORDEX',
              table_id='Amon',
              experiment_id='rcp85',
