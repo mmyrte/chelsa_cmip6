@@ -99,7 +99,7 @@ chelsa_cmip6(activity_id='CORDEX',
              source_id='MOHC-HadGEM2-ES',
              member_id='r1i1p1',
              refps='1981-01-15',
-             refpe='2010-12-15',
+             refpe='2005-12-15',
              fefps='2041-01-15',
              fefpe='2070-12-15',
              xmin=34.75,
@@ -110,7 +110,8 @@ chelsa_cmip6(activity_id='CORDEX',
              use_esgf=False,
              region='AFR-22',
              downscaling_id='REMO2015',
-             version='v20191029')
+             version='v20191029',
+             version_hist='v20191025')
 
 
 region = 'AFR-22'
