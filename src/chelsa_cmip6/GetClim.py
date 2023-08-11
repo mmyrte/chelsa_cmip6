@@ -147,6 +147,11 @@ def _get_cordex(activity_id, region, variable_id, experiment_id,
     except Exception:
         pass
 
+    try:
+        ds.drop_vars('height')
+    except Exception:
+        pass
+
     return ds
 
 
