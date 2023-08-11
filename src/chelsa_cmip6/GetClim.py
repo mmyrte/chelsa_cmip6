@@ -418,12 +418,21 @@ class CmipClimat:
                  ref_enddate, fut_startdate,
                  fut_enddate, use_esgf, region, downscaling_id, version):
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
-            setattr(self, var, cmip6_clim(activity_id, table_id,
-                             var, experiment_id,
-                             institution_id, source_id,
-                             member_id, ref_startdate,
-                             ref_enddate, fut_startdate,
-                             fut_enddate, use_esgf, region, downscaling_id, version))
+            setattr(self, var, cmip6_clim(activity_id=activity_id,
+                                          table_id=table_id,
+                                          var=var,
+                                          experiment_id=experiment_id,
+                                          institution_id=institution_id,
+                                          source_id=source_id,
+                                          member_id=member_id,
+                                          ref_startdate=ref_startdate,
+                                          ref_enddate=ref_enddate,
+                                          fut_startdate=fut_startdate,
+                                          fut_enddate=fut_enddate,
+                                          use_esgf=use_esgf,
+                                          region=region,
+                                          downscaling_id=downscaling_id,
+                                          version=version))
 
 
 class DeltaChangeClim:
@@ -520,12 +529,20 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     """
     print('start downloading CMIP data:')
     with ProgressBar():
-        cm_climat = CmipClimat(activity_id, table_id,
-                               experiment_id,
-                               institution_id, source_id,
-                               member_id, refps,
-                               refpe, fefps,
-                               fefpe, use_esgf, region, downscaling_id, version)
+        cm_climat = CmipClimat(activity_id=activity_id,
+                               table_id=table_id,
+                               experiment_id=experiment_id,
+                               institution_id=institution_id,
+                               source_id=source_id,
+                               member_id=member_id,
+                               refps=refps,
+                               refpe=refpe,
+                               fefps=fefps,
+                               fefpe=fefpe,
+                               use_esgf=use_esgf,
+                               region=region,
+                               downscaling_id=downscaling_id,
+                               version=version)
 
     print('start downloading CHELSA data (depending on your internet speed this might take a while...)')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
