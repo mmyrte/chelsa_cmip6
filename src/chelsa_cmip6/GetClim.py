@@ -242,6 +242,7 @@ class cmip6_clim:
     :param activity_id: the activity_id according to CMIP6
     :param table_id: the table id according to CMIP6
     :param experiment_id: the experiment_id according to CMIP6
+    :param variable_id: the variable shortname according to CMIP6
     :param instituion_id: the instituion_id according to CMIP6
     :param source_id: the source_id according to CMIP6
     :param member_id: the member_id according to CMIP6
@@ -420,7 +421,7 @@ class CmipClimat:
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
             setattr(self, var, cmip6_clim(activity_id=activity_id,
                                           table_id=table_id,
-                                          var=var,
+                                          variable_id=var,
                                           experiment_id=experiment_id,
                                           institution_id=institution_id,
                                           source_id=source_id,
