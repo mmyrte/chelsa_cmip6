@@ -312,7 +312,7 @@ class cmip6_clim:
             self.historical_period = _get_cordex(activity_id='CORDEX',
                                              region=self.region,
                                              variable_id=self.variable_id,
-                                             experiment_id=self.experiment_id,
+                                             experiment_id='historical',
                                              instituion_id=self.institution_id,
                                              source_id=self.source_id,
                                              downscaling_id=self.downscaling_id,
