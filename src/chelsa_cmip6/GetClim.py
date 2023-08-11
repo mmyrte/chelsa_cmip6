@@ -117,6 +117,7 @@ def _get_cordex(activity_id, region, variable_id, experiment_id,
     :param experiment_id: the experiment_id
     :param instituion_id: the instituion_id
     :param source_id: the source_id
+    :param downscaling_id: downscaling model
     :param member_id: the member_id
     :param table_id: the table id
 
@@ -145,9 +146,6 @@ def _get_cordex(activity_id, region, variable_id, experiment_id,
         pass
 
     return ds
-
-
-
 
 
 class interpol:
@@ -252,13 +250,15 @@ class cmip6_clim:
     :param fut_startdate: Start date of the future future_period
     :param fut_enddate: End date of the future_period
     :param use_esgf: Use ESGF node instead of Pangeo
+    :param downscaling_id: downscaling model, only used for CORDEX
+    :param region: region id, only used for CORDEX
     """
     def __init__(self, activity_id, table_id,
                  variable_id, experiment_id,
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
-                 fut_enddate, use_esgf):
+                 fut_enddate, use_esgf, downscaling_id=None, region=False):
         self.activity_id = activity_id
         self.table_id = table_id
         self.variable_id = variable_id
@@ -270,6 +270,17 @@ class cmip6_clim:
         self.refpe = ref_enddate
         self.fefps = fut_startdate
         self.fefpe = fut_enddate
+        self.downscaling_id = downscaling_id
+        self.region = region
+        if region:
+            self.future_period = _get_cordex(activity_id='CORDEX',
+                                             region=self.region,
+                                             variable_id=self.variable_id,
+                                             experiment_id=self.experiment_id,
+                                             instituion_id=self.institution_id,
+                                             source_id=self.source_id,
+                                             downscaling_id=self.downscaling_id,
+                                             member_id=self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         if use_esgf:
             self.future_period = _get_esgf('CMIP6',
                                            self.table_id,
@@ -286,6 +297,15 @@ class cmip6_clim:
                                            self.source_id,
                                            self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         #print("future data loaded... ")
+        if region:
+            self.historical_period = _get_cordex(activity_id='CORDEX',
+                                             region=self.region,
+                                             variable_id=self.variable_id,
+                                             experiment_id=self.experiment_id,
+                                             instituion_id=self.institution_id,
+                                             source_id=self.source_id,
+                                             downscaling_id=self.downscaling_id,
+                                             member_id=self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         if use_esgf:
             self.historical_period = _get_esgf('CMIP6',
                                                self.table_id,
@@ -302,6 +322,15 @@ class cmip6_clim:
                                                self.source_id,
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         #print("historical period set... ")
+        if region:
+            self.reference_period = _get_cordex(activity_id='CORDEX',
+                                             region=self.region,
+                                             variable_id=self.variable_id,
+                                             experiment_id=self.experiment_id,
+                                             instituion_id=self.institution_id,
+                                             source_id=self.source_id,
+                                             downscaling_id=self.downscaling_id,
+                                             member_id=self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
         if use_esgf:
             self.reference_period = _get_esgf('CMIP6',
                                               self.table_id,
@@ -373,20 +402,22 @@ class CmipClimat:
     :param fut_startdate: Start date of the future future_period
     :param fut_enddate: End date of the future_period
     :param use_esgf: Use ESGF node instead of Pangeo
+    :param region: cordex region, only used for CORDEX
+    :param downscaling_id: downscaling model, only used for CORDEX
     """
     def __init__(self, activity_id, table_id,
                  experiment_id,
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
-                 fut_enddate, use_esgf):
+                 fut_enddate, use_esgf, region, downscaling_id):
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
             setattr(self, var, cmip6_clim(activity_id, table_id,
                              var, experiment_id,
                              institution_id, source_id,
                              member_id, ref_startdate,
                              ref_enddate, fut_startdate,
-                             fut_enddate, use_esgf))
+                             fut_enddate, use_esgf, region, downscaling_id))
 
 
 class DeltaChangeClim:
@@ -399,7 +430,7 @@ class DeltaChangeClim:
     :param refpe: End date of the reference_period
     :param refps: Start date of the future future_period
     :param fefpe: End date of the future_period
-    :param output: bolean: should the output be saved as a file, defaults to False
+    :param output: bollean: should the output be saved as a file, defaults to False
     """
     def __init__(self, ChelsaClimat, CmipClimat, refps, refpe, fefps, fefpe, output=False):
         self.output = output
@@ -456,7 +487,7 @@ class DeltaChangeClim:
 
 
 def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, 
-                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output, use_esgf=False):
+                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output, use_esgf=False, region=None, downscaling_id=False):
     """ 
     Calculate chelsa cmip 6 climatological normals and bioclimatic variables
     
@@ -484,7 +515,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                                institution_id, source_id,
                                member_id, refps,
                                refpe, fefps,
-                               fefpe, use_esgf)
+                               fefpe, use_esgf, region, downscaling_id)
 
     print('start downloading CHELSA data (depending on your internet speed this might take a while...)')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
