@@ -258,17 +258,13 @@ class cmip6_clim:
     :param fut_startdate: Start date of the future future_period
     :param fut_enddate: End date of the future_period
     :param use_esgf: Use ESGF node instead of Pangeo
-    :param downscaling_id: downscaling model, only used for CORDEX
-    :param region: region id, only used for CORDEX
-    :param version: version, only used for CORDEX
-    :param version_hist: version of the historical files, only used for CORDEX
     """
     def __init__(self, activity_id, table_id,
                  variable_id, experiment_id,
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
-                 fut_enddate, use_esgf, downscaling_id=None, region=False, version=None, version_hist=None):
+                 fut_enddate, use_esgf):
         self.activity_id = activity_id
         self.table_id = table_id
         self.variable_id = variable_id
@@ -280,29 +276,16 @@ class cmip6_clim:
         self.refpe = ref_enddate
         self.fefps = fut_startdate
         self.fefpe = fut_enddate
-        self.downscaling_id = downscaling_id
-        self.region = region
-        self.version = version
-        self.version_hist = version_hist
-        if region is not False:
-            self.future_period = _get_cordex(activity_id='CORDEX',
-                                             region=self.region,
-                                             variable_id=self.variable_id,
-                                             experiment_id=self.experiment_id,
-                                             instituion_id=self.institution_id,
-                                             source_id=self.source_id,
-                                             downscaling_id=self.downscaling_id,
-                                             member_id=self.member_id,
-                                             version=self.version,
-                                             version_hist=self.version_hist).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
-        if use_esgf is True and region is False:
+        self.use_esgf = use_esgf
+
+        if self.use_esgf is True:
             self.future_period = _get_esgf('CMIP6',
                                            self.table_id,
                                            self.variable_id,
                                            self.experiment_id,
                                            self.source_id,
                                            self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
-        if use_esgf is False and region is False:
+        if self.use_esgf is False:
             self.future_period = _get_cmip(self.activity_id,
                                            self.table_id,
                                            self.variable_id,
@@ -311,25 +294,14 @@ class cmip6_clim:
                                            self.source_id,
                                            self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         #print("future data loaded... ")
-        if region is not False:
-            self.historical_period = _get_cordex(activity_id='CORDEX',
-                                             region=self.region,
-                                             variable_id=self.variable_id,
-                                             experiment_id='historical',
-                                             instituion_id=self.institution_id,
-                                             source_id=self.source_id,
-                                             downscaling_id=self.downscaling_id,
-                                             member_id=self.member_id,
-                                             version=self.version,
-                                             version_hist=self.version_hist).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
-        if use_esgf is True and region is False:
+        if self.use_esgf is True:
             self.historical_period = _get_esgf('CMIP6',
                                                self.table_id,
                                                self.variable_id,
                                                'historical',
                                                self.source_id,
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
-        if use_esgf is False and region is False:
+        if self.use_esgf is False:
             self.historical_period = _get_cmip('CMIP',
                                                self.table_id,
                                                self.variable_id,
@@ -338,25 +310,14 @@ class cmip6_clim:
                                                self.source_id,
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         #print("historical period set... ")
-        if region is not False:
-            self.reference_period = _get_cordex(activity_id='CORDEX',
-                                             region=self.region,
-                                             variable_id=self.variable_id,
-                                             experiment_id=self.experiment_id,
-                                             instituion_id=self.institution_id,
-                                             source_id=self.source_id,
-                                             downscaling_id=self.downscaling_id,
-                                             member_id=self.member_id,
-                                             version=self.version,
-                                             version_hist=version_hist).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
-        if use_esgf is True and region is False:
+        if self.use_esgf is True:
             self.reference_period = _get_esgf('CMIP6',
                                               self.table_id,
                                               self.variable_id,
                                               'historical',
                                               self.source_id,
                                               self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
-        if use_esgf is False and region is False:
+        if self.use_esgf is False:
             self.reference_period = _get_cmip('CMIP',
                                               self.table_id,
                                               self.variable_id,
@@ -420,16 +381,13 @@ class CmipClimat:
     :param fut_startdate: Start date of the future future_period
     :param fut_enddate: End date of the future_period
     :param use_esgf: Use ESGF node instead of Pangeo
-    :param region: cordex region, only used for CORDEX
-    :param downscaling_id: downscaling model, only used for CORDEX
-    :param version: version, only used for CORDEX
     """
     def __init__(self, activity_id, table_id,
                  experiment_id,
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
-                 fut_enddate, use_esgf, region, downscaling_id, version, version_hist):
+                 fut_enddate, use_esgf):
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
             setattr(self, var, cmip6_clim(activity_id=activity_id,
                                           table_id=table_id,
@@ -442,11 +400,8 @@ class CmipClimat:
                                           ref_enddate=ref_enddate,
                                           fut_startdate=fut_startdate,
                                           fut_enddate=fut_enddate,
-                                          use_esgf=use_esgf,
-                                          region=region,
-                                          downscaling_id=downscaling_id,
-                                          version=version,
-                                          version_hist=version_hist))
+                                          use_esgf=use_esgf
+                                          ))
 
 
 class DeltaChangeClim:
@@ -537,9 +492,6 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     :param ymax: Maximum latitude [Decimal degree]
     :param output: output directory, string
     :param use_esgf: bollean, Use ESGF node instead of Pangeo, default=False
-    :param region: CORDEX region, only used for CORDEX
-    :param downscaling_id: downscaling model, only used for CORDEX
-    :param version: version id, only used for CORDEX
     """
     print('start downloading CMIP data:')
     with ProgressBar():
@@ -553,11 +505,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                                ref_enddate=refpe,
                                fut_startdate=fefps,
                                fut_enddate=fefpe,
-                               use_esgf=use_esgf,
-                               region=region,
-                               downscaling_id=downscaling_id,
-                               version=version,
-                               version_hist=version_hist)
+                               use_esgf=use_esgf)
 
     print('start downloading CHELSA data (depending on your internet speed this might take a while...)')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
@@ -601,13 +549,3 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                + cm_climat.tas.experiment_id + '_' + cm_climat.tas.member_id \
                + '_' + cm_climat.tas.fefps + '_' + cm_climat.tas.fefpe + '.nc'
         getattr(biofutr, str(n))().to_netcdf(name)
-
-
-
-
-
-
-
-
-
-
