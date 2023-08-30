@@ -237,7 +237,7 @@ class chelsaV2:
         if self.variable_id == "tas" or self.variable_id == 'tasmin' or self.variable_id == 'tasmax':
             res = ds.assign(Band1=ds['Band1'] * 0.1)
         if self.variable_id == 'pr':
-            res = ds.assign(Band1=ds['Band1'] * 0.01)
+            res = ds.assign(Band1=ds['Band1'] * 0.1)
 
         return res
 
