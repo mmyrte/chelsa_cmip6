@@ -236,7 +236,7 @@ class cmip6_clim:
                                            variable_id=self.variable_id,
                                            experiment_id=self.experiment_id,
                                            source_id=self.source_id,
-                                           member_id=self.member_id
+                                           member_id=self.member_id,
                                            node=self.node).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         if self.use_esgf is False:
             self.future_period = _get_cmip(self.activity_id,
@@ -253,7 +253,7 @@ class cmip6_clim:
                                                variable_id=self.variable_id,
                                                experiment_id='historical',
                                                source_id=self.source_id,
-                                               member_id=self.member_id
+                                               member_id=self.member_id,
                                                node=self.node).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         if self.use_esgf is False:
             self.historical_period = _get_cmip('CMIP',
@@ -270,7 +270,7 @@ class cmip6_clim:
                                               variable_id=self.variable_id,
                                               experiment_id='historical',
                                               source_id=self.source_id,
-                                              member_id=self.member_id
+                                              member_id=self.member_id,
                                               node_id=self.node).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
         if self.use_esgf is False:
             self.reference_period = _get_cmip('CMIP',
