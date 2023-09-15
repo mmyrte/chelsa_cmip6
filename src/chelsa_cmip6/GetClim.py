@@ -215,7 +215,7 @@ class cmip6_clim:
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
-                 fut_enddate, use_esgf):
+                 fut_enddate, use_esgf, node):
         self.activity_id = activity_id
         self.table_id = table_id
         self.variable_id = variable_id
