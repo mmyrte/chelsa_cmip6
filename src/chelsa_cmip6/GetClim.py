@@ -208,6 +208,7 @@ class cmip6_clim:
     :param fut_startdate: Start date of the future future_period
     :param fut_enddate: End date of the future_period
     :param use_esgf: Use ESGF node instead of Pangeo
+    :param node: string, address of the ESFG node, default=https://esgf.ceda.ac.uk/esg-search    
     """
     def __init__(self, activity_id, table_id,
                  variable_id, experiment_id,
@@ -227,14 +228,16 @@ class cmip6_clim:
         self.fefps = fut_startdate
         self.fefpe = fut_enddate
         self.use_esgf = use_esgf
+        self.node = node
 
         if self.use_esgf is True:
-            self.future_period = _get_esgf('CMIP6',
-                                           self.table_id,
-                                           self.variable_id,
-                                           self.experiment_id,
-                                           self.source_id,
-                                           self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
+            self.future_period = _get_esgf(activity_id=self.activity_id,
+                                           table_id=self.table_id,
+                                           variable_id=self.variable_id,
+                                           experiment_id=self.experiment_id,
+                                           source_id=self.source_id,
+                                           member_id=self.member_id
+                                           node=self.node).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         if self.use_esgf is False:
             self.future_period = _get_cmip(self.activity_id,
                                            self.table_id,
@@ -245,12 +248,13 @@ class cmip6_clim:
                                            self.member_id).sel(time=slice(self.fefps, self.fefpe)).groupby("time.month").mean("time")
         #print("future data loaded... ")
         if self.use_esgf is True:
-            self.historical_period = _get_esgf('CMIP6',
-                                               self.table_id,
-                                               self.variable_id,
-                                               'historical',
-                                               self.source_id,
-                                               self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
+            self.historical_period = _get_esgf(activity_id='CMIP6',
+                                               table_id=self.table_id,
+                                               variable_id=self.variable_id,
+                                               experiment_id='historical',
+                                               source_id=self.source_id,
+                                               member_id=self.member_id
+                                               node=self.node).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         if self.use_esgf is False:
             self.historical_period = _get_cmip('CMIP',
                                                self.table_id,
@@ -261,12 +265,13 @@ class cmip6_clim:
                                                self.member_id).sel(time=slice(self.refps, self.refpe)).groupby("time.month").mean("time")
         #print("historical period set... ")
         if self.use_esgf is True:
-            self.reference_period = _get_esgf('CMIP6',
-                                              self.table_id,
-                                              self.variable_id,
-                                              'historical',
-                                              self.source_id,
-                                              self.member_id).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
+            self.reference_period = _get_esgf(activity_id='CMIP6',
+                                              table_id=self.table_id,
+                                              variable_id=self.variable_id,
+                                              experiment_id='historical',
+                                              source_id=self.source_id,
+                                              member_id=self.member_id
+                                              node_id=self.node).sel(time=slice('1981-01-15', '2010-12-15')).groupby("time.month").mean("time")
         if self.use_esgf is False:
             self.reference_period = _get_cmip('CMIP',
                                               self.table_id,
@@ -331,6 +336,7 @@ class CmipClimat:
     :param fut_startdate: Start date of the future future_period
     :param fut_enddate: End date of the future_period
     :param use_esgf: Use ESGF node instead of Pangeo
+    :param node: string, address of the ESFG node, default=https://esgf.ceda.ac.uk/esg-search
     """
     def __init__(self, activity_id, table_id,
                  experiment_id,
@@ -350,7 +356,8 @@ class CmipClimat:
                                           ref_enddate=ref_enddate,
                                           fut_startdate=fut_startdate,
                                           fut_enddate=fut_enddate,
-                                          use_esgf=use_esgf
+                                          use_esgf=use_esgf,
+                                          node=node
                                           ))
 
 
@@ -421,8 +428,7 @@ class DeltaChangeClim:
 
 
 def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id, member_id, 
-                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output, use_esgf=False, region=None,
-                 downscaling_id=False, version=None, version_hist=None):
+                 refps, refpe, fefps, fefpe, xmin, xmax, ymin, ymax, output, use_esgf=False, node='https://esgf.ceda.ac.uk/esg-search'):
     """ 
     Calculate chelsa cmip 6 climatological normals and bioclimatic variables
     
@@ -442,6 +448,7 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
     :param ymax: Maximum latitude [Decimal degree]
     :param output: output directory, string
     :param use_esgf: bollean, Use ESGF node instead of Pangeo, default=False
+    :param node: string, address of the ESFG node, default=https://esgf.ceda.ac.uk/esg-search
     """
     print('start downloading CMIP data:')
     with ProgressBar():
@@ -455,7 +462,8 @@ def chelsa_cmip6(source_id, institution_id, table_id, activity_id, experiment_id
                                ref_enddate=refpe,
                                fut_startdate=fefps,
                                fut_enddate=fefpe,
-                               use_esgf=use_esgf)
+                               use_esgf=use_esgf,
+                               node=node)
 
     print('start downloading CHELSA data (depending on your internet speed this might take a while...)')
     ch_climat = ChelsaClimat(xmin, xmax, ymin, ymax)
