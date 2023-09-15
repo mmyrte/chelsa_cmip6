@@ -343,7 +343,7 @@ class CmipClimat:
                  institution_id, source_id,
                  member_id, ref_startdate,
                  ref_enddate, fut_startdate,
-                 fut_enddate, use_esgf):
+                 fut_enddate, use_esgf, node):
         for var in ['pr', 'tas', 'tasmax', 'tasmin']:
             setattr(self, var, cmip6_clim(activity_id=activity_id,
                                           table_id=table_id,
