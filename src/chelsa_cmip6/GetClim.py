@@ -165,7 +165,7 @@ class chelsaV2:
 
         a = []
         for month in range(1, 13):
-            url = 'https://os.zhdk.cloud.switch.ch/envicloud/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010/ncdf/CHELSA_' + self.variable_id + '_' + '%02d' % (
+            url = 'https://os.zhdk.cloud.switch.ch/chelsav2/GLOBAL/climatologies/1981-2010/ncdf/CHELSA_' + self.variable_id + '_' + '%02d' % (
                 month,) + '_1981-2010_V.2.1.nc'
             with fsspec.open(url) as fobj:
                 ds = xr.open_dataset(fobj).chunk({'lat': 500, 'lon': 500})
