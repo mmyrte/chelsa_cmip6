@@ -252,7 +252,7 @@ class BioClim:
         bio7 = bio5-bio6
         bio2 = self._diurnalrange_(tasmax, tasmin)
         bio3 = bio2 / bio7
-        return bio7
+        return bio3
 
     def _bio7_(self, tasmax, tasmin):
         """
