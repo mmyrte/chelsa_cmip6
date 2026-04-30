@@ -1,6 +1,16 @@
-[build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+[project]
+name = "chelsa-cmip6"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "dask>=2026.3.0",
+    "esgf-pyclient",
+    "gcsfs>=2026.4.0",
+    "scipy>=1.17.1",
+    "xarray>=2026.4.0",
 ]
-build-backend = "setuptools.build_meta"
+
+[tool.uv.sources]
+esgf-pyclient = { git = "https://github.com/ESGF/esgf-pyclient" }
